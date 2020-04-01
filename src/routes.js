@@ -1,4 +1,6 @@
-import { Router } from "express";
+import {
+  Router
+} from "express";
 
 import UsuarioController from "./app/controllers/UsuarioController";
 import SessionController from "./app/controllers/SessionController";
@@ -28,10 +30,7 @@ routes.get("/", (req, res) => {
 
 routes.post("/sessions", SessionController.store);
 
-routes.post(
-  "/disciplina",
-  DisciplinaController.store
-);
+
 
 routes.post(
   "/aluno",
@@ -44,8 +43,23 @@ routes.put(
   AlunoController.update
 );
 
+routes.post("/disciplina", DisciplinaController.store);
 routes.get("/disciplinas", DisciplinaController.index);
+
 routes.get("/alunos", AlunoController.index);
+
+//essas rotas são dependências
+// só pode criar disciplinas se tiver um usuário
+// routes.get('/aluno/:id_aluno/disciplinas', DisciplinaController.index);
+// routes.get('/aluno/:id_aluno/disciplinas', DisciplinaController.indexById);
+
+routes.get('/aluno/:id_aluno/disciplinas', DisciplinaController.viewAllDisciplina);
+
+// routes.post('/aluno/:id_aluno/disciplinas', DisciplinaController.store);
+routes.post('/aluno/:id_aluno/disciplinas', DisciplinaController.storeOnlyAluno);
+
+routes.delete('/aluno/:id_aluno/disciplinas', DisciplinaController.delete);
+
 
 
 routes.post(
