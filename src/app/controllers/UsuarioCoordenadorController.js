@@ -32,12 +32,24 @@ class UsuarioCoordenadorController {
       where: { usuario: req.body.usuario.usuario }
     });
 
+    const matriculaExists = await Usuario.findOne({
+      where: { matricula: req.body.usuario.matricula }
+    });
+
+    const coodernadorExists = await Usuario_Coordenador.findOne({
+      where: { cod_pessoa: req.body.usuario_coordenador.cod_pessoa }
+    });
+
     req.body.usuario.senha = await cryptPass(req.body.usuario.senha);
 
     if (usuarioExists) {
       return res.status(200).json({ error: "Usuario ja existe." });
     } else if (emailExists) {
       return res.status(200).json({ error: "Email ja esta em uso." });
+    }else if (matriculaExists) {
+      return res.status(200).json({ error: "Matricula ja esta em uso." });
+    }else if (coodernadorExists) {
+      return res.status(200).json({ error: "Codigo Pessoa ja cadastrado." });
     }
 
     await Usuario_Coordenador.create(

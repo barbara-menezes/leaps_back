@@ -4,10 +4,7 @@ class Usuario_monitor extends Model {
   static init(sequelize) {
     super.init(
       {
-        matricula: Sequelize.STRING,
-        telefone_celular:Sequelize.STRING,
-        dt_nascimento: Sequelize.DATE,
-        materia: Sequelize.STRING,
+        tipo: Sequelize.STRING
       },
       {
         sequelize

@@ -32,20 +32,23 @@ class UsuarioMonitorController {
       where: { usuario: req.body.usuario.usuario }
     });
 
+    const matriculaExists = await Usuario.findOne({
+      where: { matricula: req.body.usuario.matricula }
+    });
+
     req.body.usuario.senha = await cryptPass(req.body.usuario.senha);
 
     if (usuarioExists) {
       return res.status(200).json({ error: "Usuario ja existe." });
     } else if (emailExists) {
       return res.status(200).json({ error: "Email ja esta em uso." });
+    }else if (matriculaExists) {
+      return res.status(200).json({ error: "Matricula ja esta em uso." });
     }
 
     await Usuario_Monitor.create(
       {
-        matricula: req.body.usuario_monitor.matricula,
-        telefone_celular: req.body.usuario_monitor.telefone_celular,
-        dt_nascimento: req.body.usuario_monitor.dt_nascimento,
-        materia: req.body.usuario_monitor.materia,
+        tipo: req.body.usuario_monitor.tipo,
         Usuario: req.body.usuario,
       },
       {
@@ -182,7 +185,7 @@ class UsuarioMonitorController {
           model:Usuario, as: "Usuario",
           attributes: ['nome', 'email']
         },
-        attributes: ['telefone_celular', 'materia'],
+        attributes: ['tipo'],
       }))}
 
       if(monitor){
@@ -210,7 +213,7 @@ class UsuarioMonitorController {
               model:Usuario, as: "Usuario",
               attributes: ['nome', 'email']
             },
-            attributes: ['telefone_celular', 'materia'],
+            attributes: ['tipo'],
       }))}
 
       if(monitor){

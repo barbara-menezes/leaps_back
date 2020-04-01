@@ -16,11 +16,11 @@ module.exports = {
         allowNull: false
       },
       periodo: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false
       },
       codigo: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
         unique: true
       },

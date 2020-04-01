@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import Aluno from "../models/Aluno";
 import Sequelize from 'sequelize';
+import Disciplina from "../models/Disciplina";
 const Op = Sequelize.Op;
 
 class AlunoController{
@@ -10,12 +11,16 @@ class AlunoController{
           matricula: req.body.aluno.matricula,
           nome: req.body.aluno.nome,
           telefone: req.body.aluno.telefone,
-          email: req.body.aluno.email
+          email: req.body.aluno.email,
+          disciplinas: []
+        },{
+          include: [{ association: Disciplina, as: 'disciplinas' }]
         }
       )
         .then(aluno => {
           return res.status(201).json({
             aluno: {
+                id: aluno.id,
                 matricula: aluno.matricula,
                 nome: aluno.nome,
                 telefone: aluno.telefone,
@@ -30,6 +35,9 @@ class AlunoController{
   
     async index(req, res) {
       await Aluno.findAll({
+        include:{
+          model:Disciplina, as: "Disciplinas", through: { attributes: [] }
+        },
         attributes: ["id", "matricula", "nome", "telefone", "email"],
         order: [["id", "ASC"]]
       })

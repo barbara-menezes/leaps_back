@@ -27,12 +27,12 @@ class DisciplinaController {
         .then(disciplina => {
             return res.status(201).json({
             disciplina: {
-                id: disciplina.id,
-                nome_disciplina: disciplina.nome_disciplina,
-                turno: disciplina.turno,
-                periodo: disciplina.periodo,
-                codigo: disciplina.codigo
-            }
+                  id: disciplina.id,
+                  nome_disciplina: disciplina.nome_disciplina,
+                  turno: disciplina.turno,
+                  periodo: disciplina.periodo,
+                  codigo: disciplina.codigo
+              }
             });
         })
         .catch(err => {

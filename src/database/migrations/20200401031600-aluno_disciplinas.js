@@ -1,21 +1,26 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("usuario_monitors", {
+    return queryInterface.createTable("aluno_disciplinas", {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true
       },
-      tipo: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      id_usuario: {
+      id_aluno: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "usuarios",
+          model: "alunos",
+          key: "id"
+        },
+        onDelete: "CASCADE"
+      },
+      id_disciplina: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "disciplinas",
           key: "id"
         },
         onDelete: "CASCADE"
@@ -28,10 +33,10 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false
       }
-  });
-},
+    });
+  },
 
   down: queryInterface => {
-    return queryInterface.dropTable("usuario_monitors");
+    return queryInterface.dropTable("aluno_disciplinas");
   }
 };

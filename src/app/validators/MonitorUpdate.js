@@ -3,10 +3,7 @@ import * as Yup from "yup";
 export default async (req, res, next) => {
   try {
     const schemaUsuarioMonitor = Yup.object().shape({
-      matricula: Yup.string(),
-      telefone_celular: Yup.string(),
-      dt_nascimento: Yup.string(),
-      materia: Yup.string()
+      tipo: Yup.string()
     });
 
     await schemaUsuarioMonitor.validate(req.body.usuario_monitor, {

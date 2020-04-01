@@ -9,7 +9,7 @@ import AlunoController from "./app/controllers/AlunoController"
 
 import validateUsuarioStore from "./app/validators/UsuarioStore";
 import validateMonitorStore from "./app/validators/MonitorStore";
-import validareCoordenadorStore from "./app/validators/CoordenadorStore";
+import validateCoordenadorStore from "./app/validators/CoordenadorStore";
 import validateDisciplinaStore from "./app/validators/DisciplinaStore";
 import validateAlunoStore from "./app/validators/AlunoStore";
 
@@ -57,7 +57,7 @@ routes.post(
 
 routes.post(
   "/coordenador",
-  validareCoordenadorStore,
+  validateCoordenadorStore,
   validateUsuarioStore,
   UsuarioCoordenadorController.store
 );
