@@ -5,6 +5,40 @@ import Sequelize from 'sequelize';
 const Op = Sequelize.Op;
 
 class DisciplinaController {
+
+  async disc(req, res) {
+    try {
+      const disc = await Disciplina.create(req.body);
+      return res.status(200).json(disc);
+    } catch (err) {
+      return res.status(500).json({
+        err: 'XAMBRO'
+      });
+    }
+  }
+
+  async discAndStudent(req, res) {
+    try {
+      const {
+        alunos,
+        ...data
+      } = req.body;
+      const disciplinas = await Disciplina.create(data);
+
+      if (alunos && alunos.length > 0) {
+        //add student
+        // disc.setDisciplina(student);
+        disc.addDisciplinas(alunos);
+      }
+
+      return res.status(200).json(disciplinas);
+    } catch (err) {
+      return res.status(500).json({
+        err: 'XAMBRO'
+      });
+    }
+  }
+
   async store(req, res) {
     // const schemaDisciplina = Yup.object().shape({
     //     nome_disciplina: Yup.string().required(),
@@ -82,11 +116,15 @@ class DisciplinaController {
       });
     }
 
-    const disciplina = await Disciplina.create({
+    await Disciplina.create({
         nome_disciplina: req.body.disciplina.nome_disciplina,
         turno: req.body.disciplina.turno,
         periodo: req.body.disciplina.periodo,
         codigo: req.body.disciplina.codigo,
+      }, {
+        include: [{
+          association: 'alunos'
+        }]
       })
       .then(disciplina => {
         return res.status(201).json({

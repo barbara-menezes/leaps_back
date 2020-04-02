@@ -5,6 +5,59 @@ import Disciplina from "../models/Disciplina";
 const Op = Sequelize.Op;
 
 class AlunoController {
+
+  async student(req, res) {
+    try {
+      const student = await Aluno.create(req.body);
+      return res.status(200).json(student);
+    } catch (err) {
+      return res.status(500).json({
+        err: 'XAMBRO'
+      });
+    }
+  }
+
+  async showAllStudents(req, res) {
+    try {
+      const student = await Aluno.findAll({
+        include: [{
+          model: Disciplina,
+          as: 'disciplinas',
+          through: {
+            attributes: []
+          },
+        }]
+      });
+      return res.status(200).json(student);
+    } catch (err) {
+      return res.status(500).json({
+        err: 'XAMBRO'
+      });
+    }
+  }
+
+  async StudentAndDict(req, res) {
+    try {
+      const {
+        disciplinas,
+        ...data
+      } = req.body;
+      const student = await Aluno.create(data);
+
+      if (disciplinas && disciplinas.length > 0) {
+        //add student
+        // disc.setDisciplina(student);
+        student.addAlunos(disciplinas);
+      }
+
+      return res.status(200).json(student);
+    } catch (err) {
+      return res.status(500).json({
+        err: 'XAMBRO'
+      });
+    }
+  }
+
   async store(req, res) {
     await Aluno.create({
         matricula: req.body.aluno.matricula,

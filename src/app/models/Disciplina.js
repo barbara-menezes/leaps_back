@@ -15,9 +15,6 @@ class Disciplina extends Model {
     });
     return this;
   }
-  // static associate (models) {
-  //   this.belongsToMany(models.Aluno, { through:"aluno_disciplinas", as:"alunos", foreignKey: 'id_disciplinas'});
-  // };
 
   static associate(models) {
     this.belongsToMany(models.Aluno, {
@@ -28,7 +25,5 @@ class Disciplina extends Model {
   };
 
 }
-
-
 
 export default Disciplina;

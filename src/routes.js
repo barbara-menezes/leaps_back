@@ -22,6 +22,7 @@ import validateAlunoUpdate from "./app/validators/AlunoUpdate";
 
 import authMiddleware from "./app/middlewares/auth";
 import Aluno from "./app/models/Aluno";
+import Disciplina from "./app/models/Disciplina";
 
 const routes = new Router();
 routes.get("/", (req, res) => {
@@ -30,6 +31,11 @@ routes.get("/", (req, res) => {
 
 routes.post("/sessions", SessionController.store);
 
+routes.post("/disc", DisciplinaController.disc);
+routes.post("/discAndStudent", DisciplinaController.discAndStudent);
+routes.post("/student", AlunoController.student);
+routes.get("/showAllStudents", AlunoController.showAllStudents);
+routes.get("/StudentAndDict", AlunoController.StudentAndDict);
 
 
 routes.post(
