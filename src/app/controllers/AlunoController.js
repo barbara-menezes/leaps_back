@@ -14,9 +14,14 @@ class AlunoController{
           email: req.body.aluno.email,
           disciplinas: []
         },{
-          include: [{ association: Disciplina, as: 'disciplinas' }]
-        }
-      )
+          include: [{
+          model: Disciplina,
+          as: 'disciplinas',
+          through: {
+            attributes: []
+          },
+        }]
+      })
         .then(aluno => {
           return res.status(201).json({
             aluno: {

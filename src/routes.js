@@ -17,6 +17,7 @@ import validateUsuarioUpdate from "./app/validators/UsuarioUpdate";
 import validateMonitorUpdate from "./app/validators/MonitorUpdate";
 import validateCoordenadorUpdate from "./app/validators/CoordenadorUpdate";
 import validateAlunoUpdate from "./app/validators/AlunoUpdate";
+import validateDisciplinaUpdate from "./app/validators/DisciplinaUpdate";
 
 import authMiddleware from "./app/middlewares/auth";
 import Aluno from "./app/models/Aluno";
@@ -30,8 +31,21 @@ routes.post("/sessions", SessionController.store);
 
 routes.post(
   "/disciplina",
+  validateDisciplinaStore,
   DisciplinaController.store
 );
+
+routes.put(
+  "/disciplina",
+  validateDisciplinaUpdate,
+  AlunoController.update
+);
+
+routes.get("/disciplinas", DisciplinaController.index);
+routes.get("/disciplina/:id", DisciplinaController.showById);
+routes.get("/disciplina/pesquisa/:query?", DisciplinaController.indexByQuery);
+routes.get("/disciplina/pesquisa/nome/:query?", DisciplinaController.indexByNome);
+routes.delete("/disciplina/:id", DisciplinaController.delete);
 
 routes.post(
   "/aluno",
@@ -44,7 +58,6 @@ routes.put(
   AlunoController.update
 );
 
-routes.get("/disciplinas", DisciplinaController.index);
 routes.get("/alunos", AlunoController.index);
 
 
@@ -64,7 +77,6 @@ routes.post(
 
 routes.post("/esqueciSenha", SessionController.forgotpassword);
 routes.patch("/resetarSenha/:token", SessionController.resetPass);
-
 routes.get("/usuario/usuarioExiste/:usuario", UsuarioController.UsuarioExists);
 routes.get("/usuario/emailExiste/:email", UsuarioController.EmailExists);
 
@@ -92,8 +104,6 @@ routes.get("/coordenador/pesquisa/:query?", UsuarioCoordenadorController.indexBy
 routes.get("/coordenador/pesquisa/nome/:query?", UsuarioCoordenadorController.indexByNome);
 routes.get("/aluno/pesquisa/:query?", AlunoController.indexByQuery);
 routes.get("/aluno/pesquisa/nome/:query?", AlunoController.indexByNome);
-routes.get("/disciplina/pesquisa/:query?", DisciplinaController.indexByQuery);
-routes.get("/disciplina/pesquisa/nome/:query?", DisciplinaController.indexByNome);
 
 routes.get(
   "/monitor/usuario/:usuario",
@@ -110,9 +120,7 @@ routes.get("/monitor", UsuarioMonitorController.index);
 routes.get("/coordenador/:id", UsuarioCoordenadorController.showById);
 routes.get("/coordenador", UsuarioCoordenadorController.index);
 routes.get("/aluno/:id", AlunoController.showById);
-routes.get("/disciplina/:id", DisciplinaController.showById);
-
 routes.delete("/aluno/:id", AlunoController.delete);
-routes.delete("/disciplina/:id", DisciplinaController.delete);
+
 
 export default routes;

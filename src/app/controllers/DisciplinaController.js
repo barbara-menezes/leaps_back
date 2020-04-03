@@ -5,16 +5,14 @@ const Op = Sequelize.Op;
 
 class DisciplinaController {
     async store(req, res) {
-    // const schemaDisciplina = Yup.object().shape({
-    //     nome_disciplina: Yup.string().required(),
-    //     turno: Yup.string().required(),
-    //     periodo: Yup.number().required(),
-    //     codigo: Yup.number().required()
-    // });
 
-    // if (!(await schemaDisciplina.isValid(req.body))) {
-    //     return res.status(200).json({ error: "Campo disciplina não esta de acordo" });
-    // }
+      const disciplinaExist = await Disciplina.findOne({
+        where: { codigo: req.body.disciplina.codigo }
+      });
+
+      if (disciplinaExist) {
+        return res.status(200).json({ error: "Disciplina já cadastrada." });
+      } 
 
     await Disciplina.create(
         {
