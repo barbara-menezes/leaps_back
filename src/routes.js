@@ -36,9 +36,9 @@ routes.post(
 );
 
 routes.put(
-  "/disciplina",
+  "/disciplina/:id",
   validateDisciplinaUpdate,
-  AlunoController.update
+  DisciplinaController.update
 );
 
 routes.get("/disciplinas", DisciplinaController.index);

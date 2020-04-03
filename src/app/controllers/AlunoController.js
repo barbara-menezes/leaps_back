@@ -74,7 +74,7 @@ class AlunoController{
   
     async update(req, res) {
 
-      Aluno.findOne(filtro)
+      Aluno.findOne()
         .then(async aluno => {
           if (aluno) {
               await aluno.update(

@@ -70,15 +70,28 @@ class DisciplinaController {
   
     async update(req, res) {
 
-      Disciplina.findOne(filtro)
-        .then(async disciplina => {
+      const idExist = await Disciplina.findOne({ where: { id: req.params.id } });
+
+      if (!idExist) {
+        return res
+          .status(200)
+          .json({ error: "Id da Disciplina informada nao existe" });
+      }
+
+      Disciplina.findOne({
+        where: { id: req.params.id }
+       }).
+        then(async disciplina => {
           if (disciplina) {
               await disciplina.update(
               req.body.disciplina
             );
+            return res.status(201).json({
+              disciplina
+            });
           } else {
             return res.status(200).json({
-              error: "Usuario não encontrado."
+              error: "Disciplina não encontrado."
             });
           }
         })
@@ -102,7 +115,7 @@ class DisciplinaController {
         if(disciplina){
           return res.status(200).json(disciplina);
         }else{
-          return res.status(200).json({error:"Nenhuma Disciplina encontrada"});
+          return res.status(200).json({error:"Nenhuma disciplina encontrada"});
         }
     }
   
@@ -119,7 +132,7 @@ class DisciplinaController {
         if(disciplina){
           return res.status(200).json(disciplina);
         }else{
-          return res.status(200).json({error:"Nenhuma Disciplina encontrada"});
+          return res.status(200).json({error:"Nenhuma disciplina encontrada"});
         }
       }
 
