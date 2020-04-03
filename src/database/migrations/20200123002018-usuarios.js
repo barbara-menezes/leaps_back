@@ -16,6 +16,11 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
+      matricula: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+      },
       usuario:{
         type: Sequelize.STRING,
         allowNull: false,

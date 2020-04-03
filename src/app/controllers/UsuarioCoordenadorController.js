@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import Usuario from "../models/Usuario";
-import Usuario_Monitor from "../models/Usuario_Monitor";
+import Usuario_Coordenador from "../models/Usuario_Coordenador";
 import authConfig from "../../config/auth";
 import bcrypt from "bcryptjs";
 import { Router } from "express";
@@ -22,7 +22,7 @@ function cryptPass(senha) {
   }
 }
 
-class UsuarioMonitorController {
+class UsuarioCoordenadorController {
   async store(req, res) {
     const emailExists = await Usuario.findOne({
       where: { email: req.body.usuario.email }
@@ -36,6 +36,10 @@ class UsuarioMonitorController {
       where: { matricula: req.body.usuario.matricula }
     });
 
+    const coodernadorExists = await Usuario_Coordenador.findOne({
+      where: { cod_pessoa: req.body.usuario_coordenador.cod_pessoa }
+    });
+
     req.body.usuario.senha = await cryptPass(req.body.usuario.senha);
 
     if (usuarioExists) {
@@ -44,11 +48,13 @@ class UsuarioMonitorController {
       return res.status(200).json({ error: "Email ja esta em uso." });
     }else if (matriculaExists) {
       return res.status(200).json({ error: "Matricula ja esta em uso." });
+    }else if (coodernadorExists) {
+      return res.status(200).json({ error: "Codigo Pessoa ja cadastrado." });
     }
 
-    await Usuario_Monitor.create(
+    await Usuario_Coordenador.create(
       {
-        tipo: req.body.usuario_monitor.tipo,
+        cod_pessoa: req.body.usuario_coordenador.cod_pessoa,
         Usuario: req.body.usuario,
       },
       {
@@ -56,13 +62,13 @@ class UsuarioMonitorController {
           { model: Usuario, as: "Usuario" }
       }
     )
-      .then(usuario_monitor => {
-        usuario_monitor.Usuario.senha = undefined;
+      .then(usuario_coordenador => {
+        usuario_coordenador.Usuario.senha = undefined;
         return res.status(201).json({
-          usuario: usuario_monitor.Usuario,
+          usuario: usuario_coordenador.Usuario,
           token: generateToken({
-            id_usuario: usuario_monitor.Usuario.id,
-            tipo_usuario: usuario_monitor.Usuario.id_tipo_usuario
+            id_usuario: usuario_coordenador.Usuario.id,
+            tipo_usuario: usuario_coordenador.Usuario.id_tipo_usuario
           })
         });
       })
@@ -72,7 +78,7 @@ class UsuarioMonitorController {
   }
 
   async index(req, res) {
-    await Usuario_Monitor.findAll({
+    await Usuario_Coordenador.findAll({
     })
       .then(usuario => {
         return res.status(201).json({
@@ -90,12 +96,12 @@ class UsuarioMonitorController {
     const usuario = await Usuario.findOne({
       where: { id: req.params.usuario }
     });
-    await Usuario_Monitor.findOne({
+    await Usuario_Coordenador.findOne({
       where: { id_usuario: usuario.id }
     })
-      .then(usuario_monitor => {
+      .then(usuario_coordenador => {
         return res.status(201).json({
-          usuario_monitor
+            usuario_coordenador
         });
       })
       .catch(err => {
@@ -104,12 +110,12 @@ class UsuarioMonitorController {
   }
 
   async showById(req, res) {
-    await Usuario_Monitor.findOne({
+    await Usuario_Coordenador.findOne({
       where: { id: req.params.id }
     })
-      .then(usuario_monitor => {
+      .then(usuario_coordenador => {
         return res.status(201).json({
-          usuario_monitor
+            usuario_coordenador
         });
       })
       .catch(err => {
@@ -141,14 +147,14 @@ class UsuarioMonitorController {
         { model: Usuario, as: "Usuario" }
     };
 
-    Usuario_Monitor.findOne(filtro)
-      .then(async usuario_monitor => {
-        if (usuario_monitor) {
-          const update_usuario = await usuario_monitor.Usuario.update(
+    Usuario_Coordenador.findOne(filtro)
+      .then(async usuario_coordenador => {
+        if (usuario_coordenador) {
+          const update_usuario = await usuario_coordenador.Usuario.update(
             req.body.usuario
           );
-          const update_usuario_monitor = await usuario_monitor.update(
-            req.body.usuario_monitor
+          const update_usuario_coordenador = await usuario_coordenador.update(
+            req.body.usuario_coordenador
           );
           update_usuario.senha = undefined;
           return res.status(201).json({
@@ -177,21 +183,21 @@ class UsuarioMonitorController {
     }
 
     let query = req.params.query.split('+');
-    let monitor=[];
+    let coordenador=[];
     for(let i=0;i<query.length;i++){
-      monitor.push(await Usuario_Monitor.findAll({
+      coordenador.push(await Usuario_Coordenador.findAll({
         where :{materia: {[Op.iLike]: "%"+query[i]+"%"}},
         include:{
           model:Usuario, as: "Usuario",
           attributes: ['nome', 'email']
         },
-        attributes: ['tipo'],
+        attributes: ['telefone_celular', 'materia'],
       }))}
 
-      if(monitor){
-        return res.status(200).json(monitor);
+      if(coordenador){
+        return res.status(200).json(coordenador);
       }else{
-        return res.status(200).json({error:"Nenhum Monitor encontrado"});
+        return res.status(200).json({error:"Nenhum Coordenador encontrado"});
       }
   }
 
@@ -205,23 +211,23 @@ class UsuarioMonitorController {
         where :[{nome: {[Op.iLike]: "%"+query[i]+"%"}}, {id_tipo_usuario: 1}]
     }))}
 
-    let monitor=[];
+    let coordenador=[];
     for(let i=0;i<usuarioList.length;i++){
-        monitor.push(await Usuario_Monitor.findAll({
+        coordenador.push(await Usuario_Coordenador.findAll({
             where : {id_usuario: usuarioList[i].id},
             include:{
               model:Usuario, as: "Usuario",
               attributes: ['nome', 'email']
             },
-            attributes: ['tipo'],
+            attributes: ['telefone_celular', 'materia'],
       }))}
 
-      if(monitor){
-        return res.status(200).json(monitor);
+      if(coordenador){
+        return res.status(200).json(coordenador);
       }else{
-        return res.status(200).json({error:"Nenhum Monitor encontrado"});
+        return res.status(200).json({error:"Nenhum Coordenador encontrado"});
       }
     }
 }
 
-export default new UsuarioMonitorController();
+export default new UsuarioCoordenadorController();

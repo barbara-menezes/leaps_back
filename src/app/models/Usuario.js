@@ -7,6 +7,7 @@ class Usuario extends Model {
       {
         nome: Sequelize.STRING,
         email: Sequelize.STRING,
+        matricula: Sequelize.STRING,
         usuario: Sequelize.STRING,
         senha: Sequelize.STRING,
         id_tipo_usuario: Sequelize.INTEGER

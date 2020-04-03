@@ -1,10 +1,10 @@
 import Sequelize, { Model } from "sequelize";
 
-class Usuario_monitor extends Model {
+class Usuario_coordenador extends Model {
   static init(sequelize) {
     super.init(
       {
-        tipo: Sequelize.STRING
+        cod_pessoa: Sequelize.STRING
       },
       {
         sequelize
@@ -17,4 +17,4 @@ class Usuario_monitor extends Model {
   };
 }
 
-export default Usuario_monitor;
+export default Usuario_coordenador;

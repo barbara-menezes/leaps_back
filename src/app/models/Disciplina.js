@@ -6,8 +6,8 @@ class Disciplina extends Model {
       {
         nome_disciplina: Sequelize.STRING,
         turno: Sequelize.STRING,
-        periodo: Sequelize.INTEGER,
-        codigo: Sequelize.INTEGER,
+        periodo: Sequelize.STRING,
+        codigo: Sequelize.STRING,
       },
       {
         sequelize
@@ -15,6 +15,9 @@ class Disciplina extends Model {
     );
     return this;
   }
+  static associate (models){
+    this.belongsToMany(models.Aluno, { through:"aluno_disciplinas", as:"alunos", foreignKey: 'id_disciplinas'});
+  };
 }
 
 

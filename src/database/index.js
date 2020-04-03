@@ -4,16 +4,20 @@ import databaseConfig from '../config/database';
 import Tipo_Usuario from "../app/models/Tipo_Usuario";
 import Usuario from "../app/models/Usuario";
 import Usuario_Monitor from "../app/models/Usuario_Monitor";
+import Usuario_Coordenador from "../app/models/Usuario_Coordenador";
 import Token_Senha from "../app/models/Token_Senha";
-import Disciplina from "../app/models/Disciplina"
+import Disciplina from "../app/models/Disciplina";
+import Aluno from "../app/models/Aluno";
 require('dotenv').config()
 
 const models = [
   Tipo_Usuario,
   Usuario,
   Usuario_Monitor,
+  Usuario_Coordenador,
   Token_Senha,
-  Disciplina
+  Disciplina,
+  Aluno
 ];
 
 class Database {

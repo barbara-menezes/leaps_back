@@ -2,18 +2,18 @@ import * as Yup from "yup";
 
 export default async (req, res, next) => {
   try {
-    const schemaUsuarioMonitor = Yup.object().shape({
-      tipo: Yup.string()
+    const schemaUsuarioCoordendor = Yup.object().shape({
+      cod_pessoa: Yup.string()
     });
 
-    await schemaUsuarioMonitor.validate(req.body.usuario_monitor, {
+    await schemaUsuarioCoordendor.validate(req.body.usuario_coordenador, {
       abortEarly: false
     });
 
     return next();
   } catch (err) {
     return res.status(423).json({
-      error: "Campo usuario monitor não esta de acordo",
+      error: "Campo usuario coordenador não esta de acordo",
       messages: err.inner
     });
   }

@@ -4,10 +4,11 @@ export default async (req, res, next) => {
   try {
     const schemaUsuario = Yup.object().shape({
       nome: Yup.string().required(),
-      usuario: Yup.string().required(),
       email: Yup.string()
         .email()
         .required(),
+      matricula: Yup.string().required(),
+      usuario: Yup.string().required(),
       senha: Yup.string().required(),
       id_tipo_usuario: Yup.number().required()
     });
