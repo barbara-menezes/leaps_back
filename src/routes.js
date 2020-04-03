@@ -1,11 +1,14 @@
-import { Router } from "express";
+import {
+  Router
+} from "express";
 
 import UsuarioController from "./app/controllers/UsuarioController";
 import SessionController from "./app/controllers/SessionController";
 import UsuarioMonitorController from "./app/controllers/UsuarioMonitorController";
 import UsuarioCoordenadorController from "./app/controllers/UsuarioCoordenadorController";
 import DisciplinaController from "./app/controllers/DisciplinaController";
-import AlunoController from "./app/controllers/AlunoController"
+import AlunoController from "./app/controllers/AlunoController";
+import TesteController from "./app/controllers/TesteController";
 
 import validateUsuarioStore from "./app/validators/UsuarioStore";
 import validateMonitorStore from "./app/validators/MonitorStore";
@@ -60,6 +63,13 @@ routes.put(
 
 routes.get("/alunos", AlunoController.index);
 
+routes.post(
+  "/teste",
+  TesteController.store
+);
+
+routes.get("/testes", TesteController.index);
+routes.delete("/delete/:id", TesteController.delete);
 
 routes.post(
   "/monitor",

@@ -7,21 +7,23 @@ class DisciplinaController {
   async store(req, res) {
 
     const disciplinaExist = await Disciplina.findOne({
-      where: { codigo: req.body.disciplina.codigo }
+      where: {
+        codigo: req.body.disciplina.codigo
+      }
     });
 
     if (disciplinaExist) {
-      return res.status(200).json({ error: "Disciplina já cadastrada." });
+      return res.status(200).json({
+        error: "Disciplina já cadastrada."
+      });
     }
 
-    await Disciplina.create(
-      {
+    await Disciplina.create({
         nome_disciplina: req.body.disciplina.nome_disciplina,
         turno: req.body.disciplina.turno,
         periodo: req.body.disciplina.periodo,
         codigo: req.body.disciplina.codigo
-      }
-    )
+      })
       .then(disciplina => {
         return res.status(201).json({
           disciplina: {
@@ -40,9 +42,11 @@ class DisciplinaController {
 
   async index(req, res) {
     await Disciplina.findAll({
-      attributes: ["id", "nome_disciplina", "turno", "periodo", "codigo"],
-      order: [["id", "ASC"]]
-    })
+        attributes: ["id", "nome_disciplina", "turno", "periodo", "codigo"],
+        order: [
+          ["id", "ASC"]
+        ]
+      })
       .then(disciplina => {
         return res.status(201).json({
           disciplina
@@ -54,8 +58,10 @@ class DisciplinaController {
   }
   async showById(req, res) {
     await Disciplina.findOne({
-      where: { id: req.params.id }
-    })
+        where: {
+          id: req.params.id
+        }
+      })
       .then(disciplina => {
         return res.status(201).json({
           disciplina
@@ -70,18 +76,26 @@ class DisciplinaController {
 
   async update(req, res) {
 
-    const idExist = await Disciplina.findOne({ where: { id: req.params.id } });
+    const idExist = await Disciplina.findOne({
+      where: {
+        id: req.params.id
+      }
+    });
 
     if (!idExist) {
       return res
         .status(200)
-        .json({ error: "Id da Disciplina informada nao existe" });
+        .json({
+          error: "Id da Disciplina informada nao existe"
+        });
     }
 
     Disciplina.findOne({
-      where: { id: req.params.id }
+      where: {
+        id: req.params.id
+      }
     }).
-      then(async disciplina => {
+    then(async disciplina => {
         if (disciplina) {
           await disciplina.update(
             req.body.disciplina
@@ -108,7 +122,11 @@ class DisciplinaController {
     let disciplina = [];
     for (let i = 0; i < query.length; i++) {
       disciplina.push(await Disciplina.findAll({
-        where: { codigo: { [Op.iLike]: "%" + query[i] + "%" } },
+        where: {
+          codigo: {
+            [Op.iLike]: "%" + query[i] + "%"
+          }
+        },
         attributes: ['nome_disciplina', 'turno', 'periodo', 'codigo'],
       }))
     }
@@ -116,7 +134,9 @@ class DisciplinaController {
     if (disciplina) {
       return res.status(200).json(disciplina);
     } else {
-      return res.status(200).json({ error: "Nenhuma disciplina encontrada" });
+      return res.status(200).json({
+        error: "Nenhuma disciplina encontrada"
+      });
     }
   }
 
@@ -126,7 +146,11 @@ class DisciplinaController {
     let disciplina = [];
     for (let i = 0; i < query.length; i++) {
       disciplina.push(await Disciplina.findAll({
-        where: { nome_disciplina: { [Op.iLike]: "%" + query[i] + "%" } },
+        where: {
+          nome_disciplina: {
+            [Op.iLike]: "%" + query[i] + "%"
+          }
+        },
         attributes: ['nome_disciplina', 'turno', 'periodo', 'codigo'],
       }))
     }
@@ -134,25 +158,31 @@ class DisciplinaController {
     if (disciplina) {
       return res.status(200).json(disciplina);
     } else {
-      return res.status(200).json({ error: "Nenhuma disciplina encontrada" });
+      return res.status(200).json({
+        error: "Nenhuma disciplina encontrada"
+      });
     }
   }
 
   async delete(req, res) {
     const disciplina = await Disciplina.findOne({
-      where: { id: req.params.id },
+      where: {
+        id: req.params.id
+      },
     });
     const disciplinasAtualizada = await Disciplina.findAll({
       attributes: ["id", "nome_disciplina", "turno", "periodo", "codigo"],
-      order: [["id", "ASC"]]
+      order: [
+        ["id", "ASC"]
+      ]
     })
 
     await disciplina.destroy().then(() => {
-      return res.status(201).json({
-        message: "Disciplina deletada com sucesso!",
-        disciplinas: disciplinasAtualizada
-      });
-    })
+        return res.status(201).json({
+          message: "Disciplina deletada com sucesso!",
+          disciplinas: disciplinasAtualizada
+        });
+      })
       .catch(err => {
         console.log("ERRO: " + err);
       });
@@ -160,5 +190,3 @@ class DisciplinaController {
 }
 
 export default new DisciplinaController();
-
-
