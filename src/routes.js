@@ -9,6 +9,7 @@ import UsuarioCoordenadorController from "./app/controllers/UsuarioCoordenadorCo
 import DisciplinaController from "./app/controllers/DisciplinaController";
 import AlunoController from "./app/controllers/AlunoController";
 import TesteController from "./app/controllers/TesteController";
+import EmprestimoController from "./app/controllers/EmprestimoController";
 
 import validateUsuarioStore from "./app/validators/UsuarioStore";
 import validateMonitorStore from "./app/validators/MonitorStore";
@@ -49,6 +50,7 @@ routes.get("/disciplina/:id", DisciplinaController.showById);
 routes.get("/disciplina/pesquisa/:query?", DisciplinaController.indexByQuery);
 routes.get("/disciplina/pesquisa/nome/:query?", DisciplinaController.indexByNome);
 routes.delete("/disciplina/:id", DisciplinaController.delete);
+routes.delete("/disciplina/:id", DisciplinaController.deleteAndListAll);
 
 routes.post(
   "/aluno",
@@ -62,14 +64,17 @@ routes.put(
 );
 
 routes.get("/alunos", AlunoController.index);
-
-routes.post(
-  "/teste",
-  TesteController.store
-);
-
+// teste
+routes.post("/teste", TesteController.store);
 routes.get("/testes", TesteController.index);
 routes.delete("/delete/:id", TesteController.delete);
+// relationship teste
+routes.get('/emprestimo/:emprestimo_id/testes', TesteController.index_relationship);
+routes.post('/emprestimo/:emprestimo_id/testes', TesteController.store_relationship);
+routes.delete('/emprestimo/:emprestimo_id/testes', TesteController.delete_relationship);
+// empréstimo
+routes.get('/emprestimo', EmprestimoController.index);
+routes.post('/emprestimos', EmprestimoController.store);
 
 routes.post(
   "/monitor",

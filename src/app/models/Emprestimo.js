@@ -11,7 +11,8 @@ class Emprestimo extends Model {
       data: Sequelize.DATE,
       retorno_previsto: Sequelize.DATE,
     }, {
-      sequelize
+      sequelize,
+      tableName: 'emprestimos',
     });
     return this;
   }

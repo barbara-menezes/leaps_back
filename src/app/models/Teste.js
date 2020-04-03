@@ -9,7 +9,8 @@ class Teste extends Model {
       codigo: Sequelize.STRING,
       status: Sequelize.STRING,
     }, {
-      sequelize
+      sequelize,
+      tableName: 'testes',
     });
     return this;
   }

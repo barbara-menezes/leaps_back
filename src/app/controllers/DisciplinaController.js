@@ -187,6 +187,18 @@ class DisciplinaController {
         console.log("ERRO: " + err);
       });
   }
+
+  async deleteAndListAll(req, res) {
+    const disciplina = await Disciplina.findOne({
+      where: {
+        id: req.params.id
+      },
+    });
+    disciplina.destroy()
+    const deleted = await Disciplina.findAll()
+    return res.json(deleted);
+  }
+
 }
 
 export default new DisciplinaController();
