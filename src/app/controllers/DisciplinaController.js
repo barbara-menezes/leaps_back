@@ -2,6 +2,8 @@ import * as Yup from "yup";
 import Disciplina from "../models/Disciplina";
 import Sequelize from 'sequelize';
 const Op = Sequelize.Op;
+// import Mail from '../lib/Mail';
+import Aluno from "../models/Aluno";
 
 class DisciplinaController {
   async store(req, res) {
@@ -9,7 +11,7 @@ class DisciplinaController {
     const disciplinaExist = await Disciplina.findOne({
       where: {
         codigo: req.body.disciplina.codigo
-      }
+      },
     });
 
     if (disciplinaExist) {
@@ -45,7 +47,12 @@ class DisciplinaController {
         attributes: ["id", "nome_disciplina", "turno", "periodo", "codigo"],
         order: [
           ["id", "ASC"]
-        ]
+        ],
+        include: [{
+          model: Aluno,
+          as: 'alunos',
+          attributes: ['nome', 'email'],
+        }, ],
       })
       .then(disciplina => {
         return res.status(201).json({
@@ -55,6 +62,15 @@ class DisciplinaController {
       .catch(err => {
         console.log("ERRO: " + err);
       });
+
+    // envio de e-mail teste
+    // await Mail.sendMail({
+    //   to: `${disciplina.alunos.nome} <${disciplina.alunos.email}>`,
+    //   subject: 'Disciplina criada com sucesso.',
+    //   text: 'Você tem uma nova disciplina.'
+    // });
+
+
   }
   async showById(req, res) {
     await Disciplina.findOne({
@@ -197,6 +213,42 @@ class DisciplinaController {
     disciplina.destroy()
     const deleted = await Disciplina.findAll()
     return res.json(deleted);
+  }
+  /*
+   * add relationship of manyToMany   
+   */
+  async storege_relationship(req, res) {
+
+    const {
+      id_aluno
+    } = req.params;
+
+    const {
+      nome_disciplina,
+      turno,
+      periodo,
+      codigo,
+    } = req.body;
+
+    const aluno = await Aluno.findByPk(id_aluno);
+
+    if (!aluno) {
+      return res.status(400).json({
+        error: 'Aluno not found'
+      });
+    }
+
+    const [disciplina] = await Disciplina.findOrCreate({
+      where: {
+        nome_disciplina,
+        turno,
+        periodo,
+        codigo,
+      }
+    });
+
+    await aluno.addDisciplina(disciplina);
+    return res.json(disciplina);
   }
 
 }
