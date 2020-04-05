@@ -69,6 +69,7 @@ routes.get("/alunos", AlunoController.index);
 routes.post("/teste", TesteController.store);
 routes.get("/testes", TesteController.index);
 routes.delete("/teste/:id", TesteController.delete);
+routes.put("/teste/:id", TesteController.update);
 // relationship teste
 // routes.get('/emprestimo/:emprestimo_id/testes', TesteController.index_relationship);
 // routes.post('/emprestimo/:emprestimo_id/testes', TesteController.store_relationship);

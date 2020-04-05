@@ -60,6 +60,45 @@ class TesteController {
     const deleted = await Teste.findAll()
     return res.json(deleted);
   }
+
+  async update(req, res) {
+    const idExist = await Teste.findOne({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    if (!idExist) {
+      return res.status(200).json({
+        error: "Id do Teste informado não existe!!!",
+      });
+    }
+
+    Teste.findOne({
+        where: {
+          id: req.params.id,
+        },
+      })
+      .then(async (teste) => {
+        if (teste) {
+          await teste.update(req.body.teste);
+          return res.status(201).json({
+            teste,
+          });
+        } else {
+          return res.status(200).json({
+            error: "Teste não encontrado.",
+          });
+        }
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          error: "Erro no servidor.",
+        });
+      });
+  }
+
+
 }
 
 export default new TesteController();
