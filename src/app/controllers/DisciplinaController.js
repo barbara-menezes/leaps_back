@@ -43,16 +43,17 @@ class DisciplinaController {
   }
 
   async index(req, res) {
+    const {
+      page = 1
+    } = req.query;
+
     await Disciplina.findAll({
         attributes: ["id", "nome_disciplina", "turno", "periodo", "codigo"],
         order: [
           ["id", "ASC"]
         ],
-        include: [{
-          model: Aluno,
-          as: 'alunos',
-          attributes: ['nome', 'email'],
-        }, ],
+        limit: 20, //paginação
+        offset: (page - 1) * 20,
       })
       .then(disciplina => {
         return res.status(201).json({
