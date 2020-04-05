@@ -67,6 +67,8 @@ routes.put(
 routes.get("/alunos", AlunoController.index);
 // teste
 routes.post("/teste", TesteController.store);
+routes.get("/teste/:id", TesteController.showById);
+routes.get("/teste/pesquisa/:query?", TesteController.indexByQuery);
 routes.get("/testes", TesteController.index);
 routes.delete("/teste/:id", TesteController.delete);
 // relationship teste

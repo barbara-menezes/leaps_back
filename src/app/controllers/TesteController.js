@@ -60,6 +60,51 @@ class TesteController {
     const deleted = await Teste.findAll()
     return res.json(deleted);
   }
+
+  async showById(req, res) {
+    await Teste.findOne({
+        where: {
+          id: req.params.id
+        }
+      })
+      .then(teste => {
+        return res.status(201).json({
+          teste
+        });
+      })
+      .catch(err => {
+        return res.status(500).json({
+          error: "Erro no servidor."
+        });
+      });
+  }
+
+  async indexByQuery(req, res) {
+
+    let query = req.params.query.split('+');
+    let teste = [];
+    for (let i = 0; i < query.length; i++) {
+      teste.push(await Teste.findAll({
+        where: {
+          codigo: {
+            [Op.iLike]: "%" + query[i] + "%"
+          }
+        },
+        attributes: ['nome', 'codigo', 'status'],
+      }))
+    }
+
+    if (teste) {
+      return res.status(200).json(teste);
+    } else {
+      return res.status(200).json({
+        error: "Nenhuma teste encontrado"
+      });
+    }
+  }
+
 }
+
+
 
 export default new TesteController();
