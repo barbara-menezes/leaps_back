@@ -14,13 +14,13 @@ class Teste extends Model {
     });
     return this;
   }
-  static associate(models) {
-    this.belongsToMany(models.Emprestimo, {
-      through: "teste_emprestimos",
-      as: "emprestimos",
-      foreignKey: 'teste_id'
-    });
-  };
+  // static associate(models) {
+  //   this.belongsToMany(models.Emprestimo, {
+  //     through: "teste_emprestimos",
+  //     as: "emprestimos",
+  //     foreignKey: 'teste_id'
+  //   });
+  // };
 }
 
 export default Teste;

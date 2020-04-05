@@ -63,77 +63,77 @@ class TesteController {
     return res.json(deleted);
   }
 
-  async index_relationship(req, res) {
-    const {
-      emprestimo_id
-    } = req.params;
+  // async index_relationship(req, res) {
+  //   const {
+  //     emprestimo_id
+  //   } = req.params;
 
-    const emprestimo = await Emprestimo.findByPk(emprestimo_id, {
-      include: {
-        association: 'testes',
-        attributes: ['id', 'nome', 'codigo', 'status'],
-        through: {
-          attributes: []
-        }
-      }
-    })
-    return res.json(emprestimo.testes);
-  }
+  //   const emprestimo = await Emprestimo.findByPk(emprestimo_id, {
+  //     include: {
+  //       association: 'testes',
+  //       attributes: ['id', 'nome', 'codigo', 'status'],
+  //       through: {
+  //         attributes: []
+  //       }
+  //     }
+  //   })
+  //   return res.json(emprestimo.testes);
+  // }
 
-  async store_relationship(req, res) {
+  // async store_relationship(req, res) {
 
-    const {
-      emprestimo_id
-    } = req.params;
+  //   const {
+  //     emprestimo_id
+  //   } = req.params;
 
-    const emprestimo = await Emprestimo.findByPk(emprestimo_id);
+  //   const emprestimo = await Emprestimo.findByPk(emprestimo_id);
 
-    if (!emprestimo) {
-      return res.status(400).json({
-        error: 'Empréstimo não encontrado'
-      });
-    }
+  //   if (!emprestimo) {
+  //     return res.status(400).json({
+  //       error: 'Empréstimo não encontrado'
+  //     });
+  //   }
 
-    const teste = await Teste.findOrCreate({
-      where: {
-        id: req.params.id,
-        nome: req.body.nome,
-        codigo: req.body.codigo,
-        status: req.body.status,
-      }
-    });
+  //   const teste = await Teste.findOrCreate({
+  //     where: {
+  //       id: req.params.id,
+  //       nome: req.body.nome,
+  //       codigo: req.body.codigo,
+  //       status: req.body.status,
+  //     }
+  //   });
 
-    await emprestimo.addTeste(teste);
+  //   await emprestimo.addTeste(teste);
 
-    return res.json(teste);
-  }
+  //   return res.json(teste);
+  // }
 
-  async delete_relationship(req, res) {
+  // async delete_relationship(req, res) {
 
-    const {
-      emprestimo_id
-    } = req.params;
+  //   const {
+  //     emprestimo_id
+  //   } = req.params;
 
-    const emprestimo = await Emprestimo.findByPk(emprestimo_id);
+  //   const emprestimo = await Emprestimo.findByPk(emprestimo_id);
 
-    if (!emprestimo) {
-      return res.status(400).json({
-        error: 'Empréstimo não encontrado'
-      });
-    }
+  //   if (!emprestimo) {
+  //     return res.status(400).json({
+  //       error: 'Empréstimo não encontrado'
+  //     });
+  //   }
 
-    const teste = await Teste.findOne({
-      where: {
-        id: req.params.id,
-        nome: req.body.nome,
-        codigo: req.body.codigo,
-        status: req.body.status,
-      }
-    });
+  //   const teste = await Teste.findOne({
+  //     where: {
+  //       id: req.params.id,
+  //       nome: req.body.nome,
+  //       codigo: req.body.codigo,
+  //       status: req.body.status,
+  //     }
+  //   });
 
-    await emprestimo.removeTeste(teste);
-    return res.json(teste);
-  }
+  //   await emprestimo.removeTeste(teste);
+  //   return res.json(teste);
+  // }
 
 
 }

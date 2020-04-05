@@ -70,9 +70,9 @@ routes.post("/teste", TesteController.store);
 routes.get("/testes", TesteController.index);
 routes.delete("/delete/:id", TesteController.delete);
 // relationship teste
-routes.get('/emprestimo/:emprestimo_id/testes', TesteController.index_relationship);
-routes.post('/emprestimo/:emprestimo_id/testes', TesteController.store_relationship);
-routes.delete('/emprestimo/:emprestimo_id/testes', TesteController.delete_relationship);
+// routes.get('/emprestimo/:emprestimo_id/testes', TesteController.index_relationship);
+// routes.post('/emprestimo/:emprestimo_id/testes', TesteController.store_relationship);
+// routes.delete('/emprestimo/:emprestimo_id/testes', TesteController.delete_relationship);
 // empréstimo
 routes.get('/emprestimo', EmprestimoController.index);
 routes.post('/emprestimos', EmprestimoController.store);
