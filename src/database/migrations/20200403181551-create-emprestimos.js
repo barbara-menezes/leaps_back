@@ -1,5 +1,3 @@
-"use strict";
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable("emprestimos", {
@@ -12,6 +10,7 @@ module.exports = {
       codigo: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true
       },
       status: {
         type: Sequelize.STRING,

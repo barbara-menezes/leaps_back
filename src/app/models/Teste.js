@@ -10,7 +10,6 @@ class Teste extends Model {
       status: Sequelize.STRING,
     }, {
       sequelize,
-      tableName: 'testes',
     });
     return this;
   }

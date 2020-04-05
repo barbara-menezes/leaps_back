@@ -1,5 +1,3 @@
-"use strict";
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable("testes", {
@@ -7,27 +5,28 @@ module.exports = {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        allowNull: false,
+        allowNull: false
       },
       nome: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       codigo: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true
       },
       status: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       created_at: {
         type: Sequelize.DATE,
-        allowNull: false,
+        allowNull: false
       },
       updated_at: {
         type: Sequelize.DATE,
-        allowNull: false,
+        allowNull: false
       },
     });
   },
