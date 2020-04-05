@@ -8,6 +8,7 @@ import Usuario_Coordenador from "../app/models/Usuario_Coordenador";
 import Token_Senha from "../app/models/Token_Senha";
 import Disciplina from "../app/models/Disciplina";
 import Aluno from "../app/models/Aluno";
+import Lista_Espera from "../app/models/Lista_Espera"
 require('dotenv').config()
 
 const models = [
@@ -17,7 +18,8 @@ const models = [
   Usuario_Coordenador,
   Token_Senha,
   Disciplina,
-  Aluno
+  Aluno,
+  Lista_Espera
 ];
 
 class Database {

@@ -6,21 +6,20 @@ const Op = Sequelize.Op;
 
 class AlunoController{
     async store(req, res) {
+
+    const alunoExist = await Aluno.findOne({
+      where: { matricula: req.body.aluno.matricula }
+    });
+
+    if (alunoExist) {
+      return res.status(200).json({ error: "Aluno já cadastrado." });
+    } 
     await Aluno.create(
         {
           matricula: req.body.aluno.matricula,
           nome: req.body.aluno.nome,
           telefone: req.body.aluno.telefone,
-          email: req.body.aluno.email,
-          disciplinas: []
-        },{
-          include: [{
-          model: Disciplina,
-          as: 'disciplinas',
-          through: {
-            attributes: []
-          },
-        }]
+          email: req.body.aluno.email
       })
         .then(aluno => {
           return res.status(201).json({
@@ -40,9 +39,6 @@ class AlunoController{
   
     async index(req, res) {
       await Aluno.findAll({
-        include:{
-          model:Disciplina, as: "Disciplinas", through: { attributes: [] }
-        },
         attributes: ["id", "matricula", "nome", "telefone", "email"],
         order: [["id", "ASC"]]
       })
@@ -110,7 +106,7 @@ class AlunoController{
         }
     }
   
-    async indexByNome(req, res) {
+    async indexByName(req, res) {
 
       let query = req.params.query.split('+');
       let aluno=[];
