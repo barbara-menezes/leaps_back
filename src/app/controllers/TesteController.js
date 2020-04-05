@@ -7,10 +7,23 @@ const Op = Sequelize.Op;
 class TesteController {
 
   async store(req, res) {
+
+    const teste = await Teste.findOne({
+      where: {
+        codigo: req.body.teste.codigo
+      }
+    });
+
+    if (teste) {
+      return res.status(200).json({
+        error: "Teste já cadastrado."
+      });
+    }
+
     await Teste.create({
-        nome: Sequelize.STRING,
-        codigo: Sequelize.STRING,
-        status: Sequelize.STRING,
+        nome: req.body.teste.nome,
+        codigo: req.body.teste.codigo,
+        status: req.body.teste.status,
       }, )
       .then(teste => {
         return res.status(201).json({
