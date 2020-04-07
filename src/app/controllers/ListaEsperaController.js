@@ -35,18 +35,29 @@ class ListaEsperaController {
     }
   
     async index(req, res) {
-      await Lista_Espera.findAll({
+
+      const page = req.query.page !== undefined ? parseInt(req.query.page) : 1;
+      const limit = req.query.limit !== undefined ? parseInt(req.query.limit) : 10;
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+
+      const esperas = await Lista_Espera.findAll({
         attributes: ["id", "codigo", "status"],
         order: [["id", "ASC"]]
       })
-        .then(lista_espera => {
-          return res.status(201).json({
-            lista_espera
+      const espera = esperas.slice(startIndex, endIndex)
+      try{
+        return res.status(201).json({
+              espera,  
+              currentPage: page,
+              previousPage: startIndex > 0 ? page - 1 : "Nao existe pagina anterior",
+              nextPage: endIndex < esperas.length ? page + 1 : "Nao existe pagina posterior",
+              limit: limit
           });
-        })
-        .catch(err => {
-          console.log("ERRO: " + err);
-        });
+      }
+      catch(err){
+        console.log("ERRO: " + err);
+      };
     }
 
     async showById(req, res) {

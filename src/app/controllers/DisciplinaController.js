@@ -39,19 +39,31 @@ class DisciplinaController {
     }
   
     async index(req, res) {
-      await Disciplina.findAll({
+
+      const page = req.query.page !== undefined ? parseInt(req.query.page) : 1;
+      const limit = req.query.limit !== undefined ? parseInt(req.query.limit) : 10;
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+
+      const disciplinas = await Disciplina.findAll({
         attributes: ["id", "nome_disciplina", "turno", "periodo", "codigo"],
         order: [["id", "ASC"]]
       })
-        .then(disciplina => {
-          return res.status(201).json({
-            disciplina
+      const disciplina = disciplinas.slice(startIndex, endIndex)
+      try{
+        return res.status(201).json({
+              disciplina,  
+              currentPage: page,
+              previousPage: startIndex > 0 ? page - 1 : "Nao existe pagina anterior",
+              nextPage: endIndex < disciplinas.length ? page + 1 : "Nao existe pagina posterior",
+              limit: limit
           });
-        })
-        .catch(err => {
-          console.log("ERRO: " + err);
-        });
+      }
+      catch(err){
+        console.log("ERRO: " + err);
+      };
     }
+    
     async showById(req, res) {
       await Disciplina.findOne({
         where: { id: req.params.id }

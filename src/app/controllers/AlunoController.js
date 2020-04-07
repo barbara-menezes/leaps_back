@@ -1,7 +1,6 @@
 import * as Yup from "yup";
 import Aluno from "../models/Aluno";
-import Sequelize from 'sequelize';
-import Disciplina from "../models/Disciplina";
+import Sequelize, { EmptyResultError } from 'sequelize';
 const Op = Sequelize.Op;
 
 class AlunoController{
@@ -38,18 +37,29 @@ class AlunoController{
     }
   
     async index(req, res) {
-      await Aluno.findAll({
+
+      const page = req.query.page !== undefined ? parseInt(req.query.page) : 1;
+      const limit = req.query.limit !== undefined ? parseInt(req.query.limit) : 10;
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+
+      const alunos = await Aluno.findAll({
         attributes: ["id", "matricula", "nome", "telefone", "email"],
         order: [["id", "ASC"]]
       })
-        .then(aluno => {
-          return res.status(201).json({
-            aluno
+      const aluno = alunos.slice(startIndex, endIndex)
+      try{
+        return res.status(201).json({
+              aluno,  
+              currentPage: page,
+              previousPage: startIndex > 0 ? page - 1 : "Nao existe pagina anterior",
+              nextPage: endIndex < alunos.length ? page + 1 : "Nao existe pagina posterior",
+              limit: limit
           });
-        })
-        .catch(err => {
-          console.log("ERRO: " + err);
-        });
+      }
+      catch(err){
+        console.log("ERRO: " + err);
+      };
     }
   
     async showById(req, res) {
