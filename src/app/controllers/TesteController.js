@@ -54,11 +54,15 @@ class TesteController {
     const teste = await Teste.findOne({
       where: {
         id: req.params.id
-      },
+      }
     });
-    teste.destroy()
-    const deleted = await Teste.findAll()
-    return res.json(deleted);
+    await teste.destroy().then(() => {
+      return res.status(201).json({
+        message: "Teste deletado com sucesso!"
+      });
+    }).catch(err => {
+      console.log("ERROR: " + err);
+    });
   }
 
   async showById(req, res) {
