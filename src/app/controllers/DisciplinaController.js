@@ -272,6 +272,31 @@ class DisciplinaController {
     return res.json('Relationship success');
   }
 
+  async deleteAlunoDisciplina(req, res) {
+    const {
+      id_aluno,
+      id_disciplina
+    } = req.params;
+
+    const aluno = await Aluno.findByPk(id_aluno);
+    const disciplina = await Disciplina.findByPk(id_disciplina);
+
+    if (!aluno) {
+      return res.status(400).json({
+        error: "Aluno not found",
+      });
+    }
+
+    if (!disciplina) {
+      return res.status(400).json({
+        error: "Disciplina not found",
+      });
+    }
+
+    await aluno.removeDisciplina(disciplina);
+    return res.json('Relationship deleted');
+  }
+
 }
 
 export default new DisciplinaController();

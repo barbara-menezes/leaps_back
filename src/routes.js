@@ -53,6 +53,7 @@ routes.delete("/disciplina/:id", DisciplinaController.delete);
 routes.delete("/disciplina/:id", DisciplinaController.deleteAndListAll);
 routes.post("/aluno/:id_aluno/disciplinas", DisciplinaController.storege_relationship);
 routes.post("/aluno/:id_aluno/disciplina/:id_disciplina", DisciplinaController.addAlunoDisciplina);
+routes.delete("/aluno/:id_aluno/disciplina/:id_disciplina", DisciplinaController.deleteAlunoDisciplina);
 
 routes.post(
   "/aluno",
