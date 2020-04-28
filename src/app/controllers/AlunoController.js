@@ -38,13 +38,13 @@ class AlunoController {
 
   async index(req, res) {
     await Aluno.findAll({
-        include: {
-          model: Disciplina,
-          as: "Disciplinas",
-          through: {
-            attributes: []
-          }
-        },
+        // include: {
+        //   model: Disciplina,
+        //   as: "Disciplinas",
+        //   through: {
+        //     attributes: []
+        //   }
+        // },
         attributes: ["id", "matricula", "nome", "telefone", "email"],
         order: [
           ["id", "ASC"]

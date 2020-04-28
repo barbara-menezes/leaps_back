@@ -20,11 +20,11 @@ class DisciplinaController {
     }
 
     await Disciplina.create({
-      nome_disciplina: req.body.disciplina.nome_disciplina,
-      turno: req.body.disciplina.turno,
-      periodo: req.body.disciplina.periodo,
-      codigo: req.body.disciplina.codigo,
-    })
+        nome_disciplina: req.body.disciplina.nome_disciplina,
+        turno: req.body.disciplina.turno,
+        periodo: req.body.disciplina.periodo,
+        codigo: req.body.disciplina.codigo,
+      })
       .then((disciplina) => {
         return res.status(201).json({
           disciplina: {
@@ -47,11 +47,13 @@ class DisciplinaController {
     } = req.query;
 
     await Disciplina.findAll({
-      attributes: ["id", "nome_disciplina", "turno", "periodo", "codigo"],
-      order: [["id", "ASC"]],
-      limit: 20, //paginação
-      offset: (page - 1) * 20,
-    })
+        attributes: ["id", "nome_disciplina", "turno", "periodo", "codigo"],
+        order: [
+          ["id", "ASC"]
+        ],
+        limit: 20, //paginação
+        offset: (page - 1) * 20,
+      })
       .then((disciplina) => {
         return res.status(201).json({
           disciplina,
@@ -70,10 +72,10 @@ class DisciplinaController {
   }
   async showById(req, res) {
     await Disciplina.findOne({
-      where: {
-        id: req.params.id,
-      },
-    })
+        where: {
+          id: req.params.id,
+        },
+      })
       .then((disciplina) => {
         return res.status(201).json({
           disciplina,
@@ -100,10 +102,10 @@ class DisciplinaController {
     }
 
     Disciplina.findOne({
-      where: {
-        id: req.params.id,
-      },
-    })
+        where: {
+          id: req.params.id,
+        },
+      })
       .then(async (disciplina) => {
         if (disciplina) {
           await disciplina.update(req.body.disciplina);
@@ -181,7 +183,9 @@ class DisciplinaController {
     });
     const disciplinasAtualizada = await Disciplina.findAll({
       attributes: ["id", "nome_disciplina", "turno", "periodo", "codigo"],
-      order: [["id", "ASC"]],
+      order: [
+        ["id", "ASC"]
+      ],
     });
 
     await disciplina
@@ -211,9 +215,16 @@ class DisciplinaController {
    * add relationship of manyToMany
    */
   async storege_relationship(req, res) {
-    const { id_aluno } = req.params;
+    const {
+      id_aluno
+    } = req.params;
 
-    const { nome_disciplina, turno, periodo, codigo } = req.body;
+    const {
+      nome_disciplina,
+      turno,
+      periodo,
+      codigo
+    } = req.body;
 
     const aluno = await Aluno.findByPk(id_aluno);
 
@@ -235,6 +246,32 @@ class DisciplinaController {
     await aluno.addDisciplina(disciplina);
     return res.json(disciplina);
   }
+
+  async addAlunoDisciplina(req, res) {
+    const {
+      id_aluno,
+      id_disciplina
+    } = req.params;
+
+    const aluno = await Aluno.findByPk(id_aluno);
+    const disciplina = await Disciplina.findByPk(id_disciplina);
+
+    if (!aluno) {
+      return res.status(400).json({
+        error: "Aluno not found",
+      });
+    }
+
+    if (!disciplina) {
+      return res.status(400).json({
+        error: "Disciplina not found",
+      });
+    }
+
+    await aluno.addDisciplina(disciplina);
+    return res.json('Relationship success');
+  }
+
 }
 
 export default new DisciplinaController();

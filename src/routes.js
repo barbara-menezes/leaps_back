@@ -52,6 +52,7 @@ routes.get("/disciplina/pesquisa/nome/:query?", DisciplinaController.indexByNome
 routes.delete("/disciplina/:id", DisciplinaController.delete);
 routes.delete("/disciplina/:id", DisciplinaController.deleteAndListAll);
 routes.post("/aluno/:id_aluno/disciplinas", DisciplinaController.storege_relationship);
+routes.post("/aluno/:id_aluno/disciplina/:id_disciplina", DisciplinaController.addAlunoDisciplina);
 
 routes.post(
   "/aluno",
