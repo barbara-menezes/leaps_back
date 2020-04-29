@@ -29,7 +29,7 @@ class Database {
 
   init() {
     
-    this.connection = new Sequelize(process.env.DATABASE_URL,{
+    this.connection = new Sequelize(process.env.HEROKU_POSTGRESQL_CRIMSON_URL,{
       dialect: 'postgres',
       define: {
         timestamps: true,
