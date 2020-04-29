@@ -1,10 +1,13 @@
 require('dotenv').config();
 export default {
-    host: process.env.MAIL_HOST,
-    port: 587,
-    secure: false,
-    auth: {
-      user: process.env.MAIL_USER,
-      pass: process.env.MAIL_PASS,
-    },
-  };
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
+  auth: {
+    user: '',
+    pass: '',
+  },
+  default: {
+    from: 'Equipe LEAPS <email@gmail.com>',
+  },
+};

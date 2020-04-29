@@ -2,7 +2,7 @@ import * as Yup from "yup";
 import Disciplina from "../models/Disciplina";
 import Sequelize from "sequelize";
 const Op = Sequelize.Op;
-// import Mail from '../lib/Mail';
+import Mail from '../../config/mailer';
 import Aluno from "../models/Aluno";
 
 class DisciplinaController {
@@ -53,6 +53,11 @@ class DisciplinaController {
         ],
         limit: 20, //paginação
         offset: (page - 1) * 20,
+        include: [{
+          model: Aluno,
+          as: 'alunos',
+          attributes: ['nome', 'email'],
+        }, ],
       })
       .then((disciplina) => {
         return res.status(201).json({
@@ -65,27 +70,52 @@ class DisciplinaController {
 
     // envio de e-mail teste
     // await Mail.sendMail({
-    //   to: `${disciplina.alunos.nome} <${disciplina.alunos.email}>`,
-    //   subject: 'Disciplina criada com sucesso.',
-    //   text: 'Você tem uma nova disciplina.'
+    //   to: "matheusip3024@gmail.com",
+    //   subject: "Oi, esse é um e-mail de teste.",
+    //   text: "Olá, esse é um e-mail de teste",
+    //   html: "Olá, esse e-mail é um <a href='#'>teste</a>",
     // });
+
   }
   async showById(req, res) {
-    await Disciplina.findOne({
-        where: {
-          id: req.params.id,
-        },
-      })
-      .then((disciplina) => {
-        return res.status(201).json({
-          disciplina,
-        });
-      })
-      .catch((err) => {
-        return res.status(500).json({
-          error: "Erro no servidor.",
-        });
+    const disciplina = await Disciplina.findByPk(req.params.id, {
+      include: [{
+        model: Aluno,
+        as: 'alunos',
+        attributes: ['nome', 'email'],
+      }, ],
+    });
+    // .then((disciplina) => {
+    //   return res.status(201).json({
+    //     disciplina,
+    //   });
+    // })
+    // .catch((err) => {
+    //   return res.status(500).json({
+    //     error: "Erro no servidor.",
+    //   });
+    // });
+
+    // console.log(disciplina.alunos);
+
+    // await Mail.sendMail({
+    //   to: `${disciplina.alunos[0].nome} <${disciplina.alunos[0].email}>`,
+    //   subject: "Oi, esse é um e-mail de teste.",
+    //   text: "Olá, esse é um e-mail de teste",
+    //   html: "Olá, esse e-mail é um <a href='#'>teste</a>",
+    // });
+
+    for (var i = 0; i < disciplina.alunos.length; i++) {
+      await Mail.sendMail({
+        to: `${disciplina.alunos[i].nome} <${disciplina.alunos[i].email}>`,
+        subject: "Oi, esse é um e-mail de teste.",
+        text: "Olá, esse é um e-mail de teste",
+        html: "Olá, esse e-mail é um <a href='#'>teste</a>",
       });
+    }
+
+    res.json(disciplina);
+
   }
 
   async update(req, res) {
