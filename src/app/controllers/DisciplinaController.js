@@ -4,6 +4,7 @@ import Sequelize from "sequelize";
 const Op = Sequelize.Op;
 // import Mail from '../lib/Mail';
 import Aluno from "../models/Aluno";
+import Teste from "../models/Teste";
 
 class DisciplinaController {
   async store(req, res) {
@@ -54,10 +55,16 @@ class DisciplinaController {
         limit: 20, //paginação
         offset: (page - 1) * 20,
         include: [{
-          model: Aluno,
-          as: 'alunos',
-          attributes: ['nome', 'email'],
-        }, ],
+            model: Aluno,
+            as: 'alunos',
+            attributes: ['nome', 'email'],
+          },
+          {
+            model: Teste,
+            as: 'testes',
+            attributes: ['id', 'nome', 'codigo', 'status'],
+          }
+        ],
       })
       .then((disciplina) => {
         return res.status(201).json({
@@ -295,6 +302,73 @@ class DisciplinaController {
 
     await aluno.removeDisciplina(disciplina);
     return res.json('Relationship deleted');
+  }
+
+  /**
+   * Associa um teste e uma
+   * disciplina anteriormente
+   * já criadas
+   */
+  async addTesteDisciplina(req, res) {
+    const {
+      id_teste,
+      id_disciplina,
+    } = req.params;
+
+    const teste = await Teste.findByPk(id_teste);
+    const disciplina = await Disciplina.findByPk(id_disciplina);
+
+
+    if (!disciplina) {
+      return res.status(400).json({
+        error: "Disciplina not found",
+      });
+    }
+
+    if (!teste) {
+      return res.status(400).json({
+        error: "Disciplina not found",
+      });
+    }
+
+    await teste.addDisciplina(disciplina);
+    return res.json(disciplina);
+  }
+
+  /**
+   * Cria um teste somente se
+   * já tiver uma disciplina
+   * disponível
+   */
+  async createTesteDisciplina(req, res) {
+    const {
+      id_disciplina
+    } = req.params;
+
+    const {
+      nome,
+      codigo,
+      status,
+    } = req.body;
+
+    const disciplina = await Disciplina.findByPk(id_disciplina);
+
+    if (!disciplina) {
+      return res.status(400).json({
+        error: "Disciplina not found",
+      });
+    }
+
+    const [teste] = await Teste.findOrCreate({
+      where: {
+        nome,
+        codigo,
+        status,
+      },
+    });
+
+    await teste.addDisciplina(disciplina);
+    return res.json(teste);
   }
 
 }

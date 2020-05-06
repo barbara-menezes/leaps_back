@@ -23,6 +23,11 @@ class Emprestimo extends Model {
       as: "testes",
       foreignKey: 'id_emprestimo'
     });
+    this.belongsToMany(models.Aluno, {
+      through: "aluno_emprestimos",
+      as: "alunos",
+      foreignKey: 'id_emprestimo'
+    });
   };
 }
 

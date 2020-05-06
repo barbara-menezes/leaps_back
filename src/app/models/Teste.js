@@ -20,7 +20,16 @@ class Teste extends Model {
       as: "emprestimos",
       foreignKey: 'id_teste'
     });
+
+    this.belongsToMany(models.Disciplina, {
+      through: "disciplina_testes",
+      as: "disciplinas",
+      foreignKey: 'id_teste'
+    });
+
+
   };
+
 
 }
 

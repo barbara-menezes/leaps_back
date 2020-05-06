@@ -1,6 +1,8 @@
 import * as Yup from "yup";
 import Sequelize from 'sequelize';
+
 import Teste from "../models/Teste";
+import Disciplina from "../models/Disciplina";
 const Op = Sequelize.Op;
 
 class TesteController {
@@ -39,7 +41,12 @@ class TesteController {
   }
 
   async index(req, res) {
-    await Teste.findAll()
+    await Teste.findAll({
+        include: [{
+          model: Disciplina,
+          as: 'disciplinas'
+        }],
+      })
       .then(teste => {
         return res.status(201).json({
           teste
@@ -121,10 +128,10 @@ class TesteController {
     }
 
     Teste.findOne({
-      where: {
-        id: req.params.id,
-      },
-    })
+        where: {
+          id: req.params.id,
+        },
+      })
       .then(async (teste) => {
         if (teste) {
           await teste.update(req.body.teste);
@@ -143,8 +150,6 @@ class TesteController {
         });
       });
   }
-
-
 }
 
 

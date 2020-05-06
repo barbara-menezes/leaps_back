@@ -76,11 +76,8 @@ routes.put("/teste/:id", TesteController.update);
 routes.post("/aluno/:id_aluno/disciplina/:id_disciplina", DisciplinaController.addAlunoDisciplina);
 routes.delete("/aluno/:id_aluno/disciplina/:id_disciplina", DisciplinaController.deleteAlunoDisciplina);
 
-// relationship teste
-// routes.get('/emprestimo/:emprestimo_id/testes', TesteController.index_relationship);
-// routes.post('/emprestimo/:emprestimo_id/testes', TesteController.store_relationship);
-// routes.delete('/emprestimo/:emprestimo_id/testes', TesteController.delete_relationship);
-// empréstimo
+routes.post("/teste/:id_teste/disciplina/:id_disciplina", DisciplinaController.addTesteDisciplina);
+routes.post("/disciplina/:id_disciplina/teste", DisciplinaController.createTesteDisciplina);
 
 routes.post('/emprestimos', EmprestimoController.store);
 routes.get('/emprestimo', EmprestimoController.index);
@@ -90,6 +87,9 @@ routes.delete("/emprestimo/:id", EmprestimoController.delete);
 routes.post("/teste/:id_teste/emprestimo", EmprestimoController.createTesteEmprestimo);
 routes.post("/teste/:id_teste/emprestimo/:id_emprestimo", EmprestimoController.addTesteEmprestimo);
 routes.delete("/teste/:id_teste/emprestimo/:id_emprestimo", EmprestimoController.deleteTesteEmprestimo);
+
+routes.post("/aluno/:id_aluno/emprestimo", AlunoController.createAlunoEmprestimo);
+routes.post("/emprestimo/:id_emprestimo/aluno/:id_aluno", AlunoController.addAlunoEmprestimo);
 
 routes.post(
   "/monitor",
