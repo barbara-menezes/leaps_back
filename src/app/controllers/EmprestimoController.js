@@ -52,6 +52,58 @@ class EmprestimoController {
         console.log("ERRO: " + err);
       });
   }
+
+  async update(req, res) {
+    const idExist = await Emprestimo.findOne({
+      where: {
+        id: req.params.id,
+      },
+    });
+ 
+    if (!idExist) {
+      return res.status(200).json({
+        error: "ID do Empréstimo informado não encontrado.",
+      });
+    }
+ 
+    await Emprestimo.findOne({
+        where: {
+          id: req.params.id,
+        },
+      })
+      .then(async (emprestimo) => {
+        if (emprestimo) {
+          await emprestimo.update(req.body.emprestimo);
+          return res.status(201).json({
+            emprestimo,
+          });
+        } else {
+          return res.status(200).json({
+            error: "Emprestimo não encontrado.",
+          });
+        }
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          error: "Erro no servidor.",
+        });
+      });
+  }
+ 
+  async delete(req, res) {
+    const emprestimo = await Emprestimo.findOne({
+      where: {
+        id: req.params.id
+      }
+    });
+    await emprestimo.destroy().then(() => {
+      return res.status(201).json({
+        message: "Empréstimo deletado com sucesso!"
+      });
+    }).catch(err => {
+      console.log("ERROR: " + err);
+    });
+  }
 }
 
 export default new EmprestimoController();

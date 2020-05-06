@@ -77,8 +77,11 @@ routes.put("/teste/:id", TesteController.update);
 // routes.post('/emprestimo/:emprestimo_id/testes', TesteController.store_relationship);
 // routes.delete('/emprestimo/:emprestimo_id/testes', TesteController.delete_relationship);
 // empréstimo
-routes.get('/emprestimo', EmprestimoController.index);
+
 routes.post('/emprestimos', EmprestimoController.store);
+routes.get('/emprestimo', EmprestimoController.index);
+routes.put("/emprestimo/:id", EmprestimoController.update);
+routes.delete("/emprestimo/:id", EmprestimoController.delete);
 
 routes.post(
   "/monitor",
