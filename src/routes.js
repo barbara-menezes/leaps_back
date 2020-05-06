@@ -72,6 +72,10 @@ routes.get("/teste/pesquisa/:query?", TesteController.indexByQuery);
 routes.get("/testes", TesteController.index);
 routes.delete("/teste/:id", TesteController.delete);
 routes.put("/teste/:id", TesteController.update);
+
+routes.post("/aluno/:id_aluno/disciplina/:id_disciplina", DisciplinaController.addAlunoDisciplina);
+routes.delete("/aluno/:id_aluno/disciplina/:id_disciplina", DisciplinaController.deleteAlunoDisciplina);
+
 // relationship teste
 // routes.get('/emprestimo/:emprestimo_id/testes', TesteController.index_relationship);
 // routes.post('/emprestimo/:emprestimo_id/testes', TesteController.store_relationship);
