@@ -87,6 +87,7 @@ routes.get('/emprestimo', EmprestimoController.index);
 routes.put("/emprestimo/:id", EmprestimoController.update);
 routes.delete("/emprestimo/:id", EmprestimoController.delete);
 
+routes.post("/teste/:id_teste/emprestimo", EmprestimoController.createTesteEmprestimo);
 routes.post("/teste/:id_teste/emprestimo/:id_emprestimo", EmprestimoController.addTesteEmprestimo);
 routes.delete("/teste/:id_teste/emprestimo/:id_emprestimo", EmprestimoController.deleteTesteEmprestimo);
 

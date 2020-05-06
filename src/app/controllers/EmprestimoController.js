@@ -1,22 +1,68 @@
-import Sequelize from 'sequelize';
+import Sequelize from "sequelize";
+import {
+  startOfHour,
+  parseISO,
+  isBefore
+} from "date-fns";
 import Emprestimo from "../models/Emprestimo";
-import Teste from '../models/Teste';
+import Teste from "../models/Teste";
 const Op = Sequelize.Op;
 
 class EmprestimoController {
   async store(req, res) {
-
     const emprestimo = await Emprestimo.findOne({
       where: {
-        codigo: req.body.emprestimo.codigo
-      }
+        codigo: req.body.emprestimo.codigo,
+      },
     });
 
     if (emprestimo) {
       return res.status(200).json({
-        error: "Empréstimo já cadastrado."
+        error: "Empréstimo já cadastrado.",
       });
     }
+
+    /**
+     * Verificação por datas passadas
+     *
+     * parseISO transforma 2020-05-21T23:59:00-03:00 para um objeto DATE javascript
+     * startOfHour sempre pega o inicio da hora desconsiderando min e seg 23:59:00
+     * apenas o 23:00:00
+     *
+     */
+    // const hourStart = startOfHour(
+    //   parseISO(
+    //     req.body.emprestimo.data,
+    //     req.body.emprestimo.data_devolucao,
+    //     req.body.emprestimo.retorno_previsto
+    //   )
+    // );
+
+    // verifica se a hora atual está antes da data atual
+    // if (isBefore(hourStart, new Date())) {
+    //   return res.status(400).json({
+    //     error: "Past dates are not permitted",
+    //   });
+    // }
+
+    /**
+     * Verificação datas validas
+     */
+    // const checkAvailability = await Emprestimo.findOne({
+    //   where: {
+
+    //   },
+    //   include: [{
+    //     model: Teste,
+    //     as: "testes",
+    //   }, ],
+    // });
+
+    // if (checkAvailability) {
+    //   return res.status(400).json({
+    //     error: "Teste is not available",
+    //   });
+    // }
 
     await Emprestimo.create({
         codigo: req.body.emprestimo.codigo,
@@ -25,7 +71,7 @@ class EmprestimoController {
         data: req.body.emprestimo.data,
         retorno_previsto: req.body.emprestimo.retorno_previsto,
       })
-      .then(emprestimo => {
+      .then((emprestimo) => {
         return res.status(201).json({
           emprestimo: {
             id: emprestimo.id,
@@ -34,10 +80,10 @@ class EmprestimoController {
             data_devolucao: emprestimo.data_devolucao,
             data: emprestimo.data,
             retorno_previsto: emprestimo.retorno_previsto,
-          }
+          },
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log("ERRO: " + err);
       });
   }
@@ -46,15 +92,16 @@ class EmprestimoController {
     await Emprestimo.findAll({
         include: [{
           model: Teste,
-          as: 'testes',
-          attributes: ['nome', 'codigo', 'status'],
+          as: "testes",
+          attributes: ["nome", "codigo", "status"],
         }, ],
-      }, ).then(emprestimo => {
+      })
+      .then((emprestimo) => {
         return res.status(201).json({
-          emprestimo
+          emprestimo,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log("ERRO: " + err);
       });
   }
@@ -99,16 +146,71 @@ class EmprestimoController {
   async delete(req, res) {
     const emprestimo = await Emprestimo.findOne({
       where: {
-        id: req.params.id
-      }
+        id: req.params.id,
+      },
     });
-    await emprestimo.destroy().then(() => {
-      return res.status(201).json({
-        message: "Empréstimo deletado com sucesso!"
+    await emprestimo
+      .destroy()
+      .then(() => {
+        return res.status(201).json({
+          message: "Empréstimo deletado com sucesso!",
+        });
+      })
+      .catch((err) => {
+        console.log("ERROR: " + err);
       });
-    }).catch(err => {
-      console.log("ERROR: " + err);
+  }
+
+  /**
+   * Cria um Empréstimo somente se houver 
+   * testes 
+   */
+  async createTesteEmprestimo(req, res) {
+    const {
+      id_teste
+    } = req.params;
+
+    const {
+      codigo,
+      status,
+      data_devolucao,
+      data,
+      retorno_previsto
+    } = req.body;
+
+    const teste = await Teste.findByPk(id_teste);
+
+    if (!teste) {
+      return res.status(400).json({
+        error: "Teste not found",
+      });
+    }
+
+    const [emprestimo] = await Emprestimo.findOrCreate({
+      where: {
+        codigo,
+        status,
+        data_devolucao,
+        data,
+        retorno_previsto
+      },
     });
+
+    await teste.addEmprestimo(emprestimo);
+
+    const emprestimos = await Emprestimo.findOne({
+      where: {
+        codigo: codigo
+      },
+      attributes: ['id', 'codigo', 'status', 'data_devolucao', 'data', 'retorno_previsto'],
+      include: [{
+        model: Teste,
+        as: 'testes',
+        attributes: ['id', 'nome', 'codigo', 'status']
+      }],
+    });
+
+    return res.json(emprestimos);
   }
 
   /* adicionar relacionamento */
