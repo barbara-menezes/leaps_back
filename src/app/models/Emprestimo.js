@@ -16,13 +16,14 @@ class Emprestimo extends Model {
     });
     return this;
   }
-  // static associate(models) {
-  //   this.belongsToMany(models.Teste, {
-  //     through: "teste_emprestimos",
-  //     as: "testes",
-  //     foreignKey: 'emprestimo_id'
-  //   });
-  // };
+
+  static associate(models) {
+    this.belongsToMany(models.Teste, {
+      through: "teste_emprestimos",
+      as: "testes",
+      foreignKey: 'id_emprestimo'
+    });
+  };
 }
 
 export default Emprestimo;
