@@ -1,9 +1,9 @@
 import Sequelize from "sequelize";
-import {
-  startOfHour,
-  parseISO,
-  isBefore
-} from "date-fns";
+// import {
+//   startOfHour,
+//   parseISO,
+//   isBefore
+// } from "date-fns";
 import Emprestimo from "../models/Emprestimo";
 import Teste from "../models/Teste";
 const Op = Sequelize.Op;
@@ -65,12 +65,12 @@ class EmprestimoController {
     // }
 
     await Emprestimo.create({
-        codigo: req.body.emprestimo.codigo,
-        status: req.body.emprestimo.status,
-        data_devolucao: req.body.emprestimo.data_devolucao,
-        data: req.body.emprestimo.data,
-        retorno_previsto: req.body.emprestimo.retorno_previsto,
-      })
+      codigo: req.body.emprestimo.codigo,
+      status: req.body.emprestimo.status,
+      data_devolucao: req.body.emprestimo.data_devolucao,
+      data: req.body.emprestimo.data,
+      retorno_previsto: req.body.emprestimo.retorno_previsto,
+    })
       .then((emprestimo) => {
         return res.status(201).json({
           emprestimo: {
@@ -90,12 +90,14 @@ class EmprestimoController {
 
   async index(req, res) {
     await Emprestimo.findAll({
-        include: [{
+      include: [
+        {
           model: Teste,
           as: "testes",
           attributes: ["nome", "codigo", "status"],
-        }, ],
-      })
+        },
+      ],
+    })
       .then((emprestimo) => {
         return res.status(201).json({
           emprestimo,
@@ -120,10 +122,10 @@ class EmprestimoController {
     }
 
     await Emprestimo.findOne({
-        where: {
-          id: req.params.id,
-        },
-      })
+      where: {
+        id: req.params.id,
+      },
+    })
       .then(async (emprestimo) => {
         if (emprestimo) {
           await emprestimo.update(req.body.emprestimo);
@@ -162,21 +164,13 @@ class EmprestimoController {
   }
 
   /**
-   * Cria um Empréstimo somente se houver 
-   * testes 
+   * Cria um Empréstimo somente se houver
+   * testes
    */
   async createTesteEmprestimo(req, res) {
-    const {
-      id_teste
-    } = req.params;
+    const { id_teste } = req.params;
 
-    const {
-      codigo,
-      status,
-      data_devolucao,
-      data,
-      retorno_previsto
-    } = req.body;
+    const { codigo, status, data_devolucao, data, retorno_previsto } = req.body;
 
     const teste = await Teste.findByPk(id_teste);
 
@@ -192,7 +186,7 @@ class EmprestimoController {
         status,
         data_devolucao,
         data,
-        retorno_previsto
+        retorno_previsto,
       },
     });
 
@@ -200,14 +194,23 @@ class EmprestimoController {
 
     const emprestimos = await Emprestimo.findOne({
       where: {
-        codigo: codigo
+        codigo: codigo,
       },
-      attributes: ['id', 'codigo', 'status', 'data_devolucao', 'data', 'retorno_previsto'],
-      include: [{
-        model: Teste,
-        as: 'testes',
-        attributes: ['id', 'nome', 'codigo', 'status']
-      }],
+      attributes: [
+        "id",
+        "codigo",
+        "status",
+        "data_devolucao",
+        "data",
+        "retorno_previsto",
+      ],
+      include: [
+        {
+          model: Teste,
+          as: "testes",
+          attributes: ["id", "nome", "codigo", "status"],
+        },
+      ],
     });
 
     return res.json(emprestimos);
@@ -215,10 +218,7 @@ class EmprestimoController {
 
   /* adicionar relacionamento */
   async addTesteEmprestimo(req, res) {
-    const {
-      id_teste,
-      id_emprestimo
-    } = req.params;
+    const { id_teste, id_emprestimo } = req.params;
 
     const teste = await Teste.findByPk(id_teste);
     const emprestimo = await Emprestimo.findByPk(id_emprestimo);
@@ -241,10 +241,7 @@ class EmprestimoController {
 
   /* apagar relacionamento */
   async deleteTesteEmprestimo(req, res) {
-    const {
-      id_teste,
-      id_emprestimo
-    } = req.params;
+    const { id_teste, id_emprestimo } = req.params;
 
     const teste = await Teste.findByPk(id_teste);
     const emprestimo = await Emprestimo.findByPk(id_emprestimo);
