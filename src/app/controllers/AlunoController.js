@@ -208,6 +208,42 @@ class AlunoController {
     return res.json(aluno);
   }
 
+  /*
+   * add relationship of manyToMany
+   */
+  async addDisciplinaAluno(req, res) {
+    const {
+      id_disciplina
+    } = req.params;
+
+    const {
+      matricula,
+      nome,
+      telefone,
+      email
+    } = req.body;
+
+    const disciplina = await Disciplina.findByPk(id_disciplina);
+
+    if (!disciplina) {
+      return res.status(400).json({
+        error: "Disciplina not found",
+      });
+    }
+
+    const [aluno] = await Aluno.findOrCreate({
+      where: {
+        matricula,
+        nome,
+        telefone,
+        email
+      },
+    });
+
+    await disciplina.addAlunos(aluno);
+    return res.json(aluno);
+  }
+
   /**
    * Associa aluno a empréstimo
    * se já estiverem sido criado
@@ -237,7 +273,6 @@ class AlunoController {
     await emprestimo.addAluno(aluno);
     return res.json(aluno);
   }
-
 
 }
 
