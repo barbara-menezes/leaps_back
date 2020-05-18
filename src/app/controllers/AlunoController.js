@@ -7,6 +7,27 @@ const Op = Sequelize.Op;
 
 class AlunoController {
   async store(req, res) {
+    try {
+      const {
+        disciplinas,
+        ...data
+      } = req.body;
+
+      const aluno = await Aluno.create(data);
+
+      if (disciplinas && disciplinas.length > 0) {
+        aluno.setDisciplinas(disciplinas);
+      }
+
+      return res.status(200).json(aluno);
+    } catch (err) {
+      return res.status(500).json({
+        err
+      });
+    }
+  }
+
+  async store_2(req, res) {
     await Aluno.create({
         matricula: req.body.aluno.matricula,
         nome: req.body.aluno.nome,

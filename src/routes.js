@@ -58,6 +58,12 @@ routes.post(
   AlunoController.store
 );
 
+routes.post(
+  "/aluno2",
+  AlunoController.store_2
+);
+
+
 routes.put(
   "/aluno",
   validateAlunoUpdate,
@@ -89,7 +95,7 @@ routes.post("/teste/:id_teste/emprestimo/:id_emprestimo", EmprestimoController.a
 routes.delete("/teste/:id_teste/emprestimo/:id_emprestimo", EmprestimoController.deleteTesteEmprestimo);
 
 routes.post("/aluno/:id_aluno/emprestimo", AlunoController.createAlunoEmprestimo);
-routes.post("/disciplina/:id_disciplina/aluno", AlunoController.addDisciplinaAluno);
+routes.post("/disciplina/:id_disciplina", AlunoController.addDisciplinaAluno);
 routes.post("/emprestimo/:id_emprestimo/aluno/:id_aluno", AlunoController.addAlunoEmprestimo);
 
 routes.post(
