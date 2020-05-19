@@ -65,7 +65,7 @@ routes.post(
 
 
 routes.put(
-  "/aluno/:id",
+  "/aluno/:matricula",
   validateAlunoUpdate,
   AlunoController.update
 );
