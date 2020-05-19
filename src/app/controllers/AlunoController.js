@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 import Aluno from "../models/Aluno";
-import Sequelize from 'sequelize';
+import Sequelize from "sequelize";
 import Disciplina from "../models/Disciplina";
 import Emprestimo from "../models/Emprestimo";
 const Op = Sequelize.Op;
@@ -22,7 +22,7 @@ class AlunoController {
       return res.status(200).json(aluno);
     } catch (err) {
       return res.status(500).json({
-        err
+        err,
       });
     }
   }
@@ -36,24 +36,24 @@ class AlunoController {
       }, {
         include: [{
           model: Disciplina,
-          as: 'disciplinas',
+          as: "disciplinas",
           through: {
-            attributes: []
+            attributes: [],
           },
-        }]
+        }, ],
       })
-      .then(aluno => {
+      .then((aluno) => {
         return res.status(201).json({
           aluno: {
             id: aluno.id,
             matricula: aluno.matricula,
             nome: aluno.nome,
             telefone: aluno.telefone,
-            email: aluno.email
-          }
+            email: aluno.email,
+          },
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log("ERRO: " + err);
       });
   }
@@ -64,25 +64,25 @@ class AlunoController {
             model: Disciplina,
             as: "disciplinas",
             through: {
-              attributes: []
-            }
+              attributes: [],
+            },
           },
           {
             model: Emprestimo,
             as: "emprestimos",
-          }
+          },
         ],
         attributes: ["id", "matricula", "nome", "telefone", "email"],
         order: [
           ["id", "ASC"]
-        ]
+        ],
       })
-      .then(aluno => {
+      .then((aluno) => {
         return res.status(201).json({
-          aluno
+          aluno,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log("ERRO: " + err);
       });
   }
@@ -90,105 +90,112 @@ class AlunoController {
   async showById(req, res) {
     await Aluno.findOne({
         where: {
-          id: req.params.id
-        }
+          id: req.params.id,
+        },
       })
-      .then(aluno => {
+      .then((aluno) => {
         return res.status(201).json({
-          aluno
+          aluno,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         return res.status(500).json({
-          error: "Erro no servidor."
+          error: "Erro no servidor.",
         });
       });
   }
 
   async update(req, res) {
-
     const idExist = await Aluno.findOne({
       where: {
-        id: req.params.id,
+        matricula: req.params.matricula,
       },
-    })
+    });
 
     if (!idExist) {
       return res.status(200).json({
-        error: "Id do Aluno informado não existe",
+        error: "Matrícula do Aluno informado nao existe",
       });
     }
 
-    await Aluno.findOne({
+    Aluno.findOne({
         where: {
-          id: req.params.id
+          matricula: req.params.matricula,
         },
       })
-      .then(async aluno => {
+      .then(async (aluno) => {
         if (aluno) {
-          await aluno.update(
-            req.body.aluno
-          );
+          const {
+            disciplinas,
+            ...data
+          } = req.body;
+
+          await aluno.update(data);
+          if (disciplinas && disciplinas.length > 0) {
+            aluno.setDisciplinas(disciplinas);
+          }
           return res.status(201).json({
-            aluno
+            aluno,
           });
         } else {
           return res.status(200).json({
-            error: "Aluno não encontrado."
+            error: "Aluno não encontrado.",
           });
         }
       })
-      .catch(err => {
+      .catch((err) => {
         return res.status(500).json({
-          error: "Erro no servidor."
+          error: "Erro no servidor.",
         });
       });
   }
 
   async indexByQuery(req, res) {
-
-    let query = req.params.query.split('+');
+    let query = req.params.query.split("+");
     let aluno = [];
     for (let i = 0; i < query.length; i++) {
-      aluno.push(await Aluno.findAll({
-        where: {
-          matricula: {
-            [Op.iLike]: "%" + query[i] + "%"
-          }
-        },
-        attributes: ['matricula', 'nome', 'telefone', 'email'],
-      }))
+      aluno.push(
+        await Aluno.findAll({
+          where: {
+            matricula: {
+              [Op.iLike]: "%" + query[i] + "%",
+            },
+          },
+          attributes: ["matricula", "nome", "telefone", "email"],
+        })
+      );
     }
 
     if (aluno) {
       return res.status(200).json(aluno);
     } else {
       return res.status(200).json({
-        error: "Nenhum Aluno encontrado"
+        error: "Nenhum Aluno encontrado",
       });
     }
   }
 
   async indexByNome(req, res) {
-
-    let query = req.params.query.split('+');
+    let query = req.params.query.split("+");
     let aluno = [];
     for (let i = 0; i < query.length; i++) {
-      aluno.push(await Aluno.findAll({
-        where: {
-          nome: {
-            [Op.iLike]: "%" + query[i] + "%"
-          }
-        },
-        attributes: ['matricula', 'nome', 'telefone', 'email'],
-      }))
+      aluno.push(
+        await Aluno.findAll({
+          where: {
+            nome: {
+              [Op.iLike]: "%" + query[i] + "%",
+            },
+          },
+          attributes: ["matricula", "nome", "telefone", "email"],
+        })
+      );
     }
 
     if (aluno) {
       return res.status(200).json(aluno);
     } else {
       return res.status(200).json({
-        error: "Nenhum Aluno encontrado"
+        error: "Nenhum Aluno encontrado",
       });
     }
   }
@@ -196,15 +203,17 @@ class AlunoController {
   async delete(req, res) {
     const aluno = await Aluno.findOne({
       where: {
-        id: req.params.id
+        id: req.params.id,
       },
     });
-    await aluno.destroy().then(() => {
+    await aluno
+      .destroy()
+      .then(() => {
         return res.status(201).json({
-          message: "Aluno deletado com sucesso!"
+          message: "Aluno deletado com sucesso!",
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log("ERRO: " + err);
       });
   }
@@ -276,7 +285,7 @@ class AlunoController {
         matricula,
         nome,
         telefone,
-        email
+        email,
       },
     });
 
@@ -313,7 +322,6 @@ class AlunoController {
     await emprestimo.addAluno(aluno);
     return res.json(aluno);
   }
-
 }
 
 export default new AlunoController();
