@@ -107,15 +107,34 @@ class AlunoController {
 
   async update(req, res) {
 
-    Aluno.findOne()
+    const idExist = await Aluno.findOne({
+      where: {
+        id: req.params.id,
+      },
+    })
+
+    if (!idExist) {
+      return res.status(200).json({
+        error: "Id do Aluno informado não existe",
+      });
+    }
+
+    await Aluno.findOne({
+        where: {
+          id: req.params.id
+        },
+      })
       .then(async aluno => {
         if (aluno) {
           await aluno.update(
             req.body.aluno
           );
+          return res.status(201).json({
+            aluno
+          });
         } else {
           return res.status(200).json({
-            error: "Usuario não encontrado."
+            error: "Aluno não encontrado."
           });
         }
       })
