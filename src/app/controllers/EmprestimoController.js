@@ -10,83 +10,29 @@ import Aluno from "../models/Aluno";
 const Op = Sequelize.Op;
 
 class EmprestimoController {
-  async store(req, res) {
-    const emprestimo = await Emprestimo.findOne({
-      where: {
-        codigo: req.body.emprestimo.codigo,
-      },
-    });
 
-    if (emprestimo) {
-      return res.status(200).json({
-        error: "Empréstimo já cadastrado.",
+  async store(req, res) {
+    try {
+      const {
+        alunos,
+        testes,
+        ...data
+      } = req.body;
+
+      const emprestimo = await Emprestimo.create(data);
+
+      if (alunos && alunos.length > 0 &&
+        testes && testes.length > 0) {
+        emprestimo.setAlunos(alunos);
+        emprestimo.setTestes(testes);
+      }
+
+      return res.status(200).json(emprestimo);
+    } catch (err) {
+      return res.status(500).json({
+        err,
       });
     }
-
-    /**
-     * Verificação por datas passadas
-     *
-     * parseISO transforma 2020-05-21T23:59:00-03:00 para um objeto DATE javascript
-     * startOfHour sempre pega o inicio da hora desconsiderando min e seg 23:59:00
-     * apenas o 23:00:00
-     *
-     */
-    // const hourStart = startOfHour(
-    //   parseISO(
-    //     req.body.emprestimo.data,
-    //     req.body.emprestimo.data_devolucao,
-    //     req.body.emprestimo.retorno_previsto
-    //   )
-    // );
-
-    // verifica se a hora atual está antes da data atual
-    // if (isBefore(hourStart, new Date())) {
-    //   return res.status(400).json({
-    //     error: "Past dates are not permitted",
-    //   });
-    // }
-
-    /**
-     * Verificação datas validas
-     */
-    // const checkAvailability = await Emprestimo.findOne({
-    //   where: {
-
-    //   },
-    //   include: [{
-    //     model: Teste,
-    //     as: "testes",
-    //   }, ],
-    // });
-
-    // if (checkAvailability) {
-    //   return res.status(400).json({
-    //     error: "Teste is not available",
-    //   });
-    // }
-
-    await Emprestimo.create({
-        codigo: req.body.emprestimo.codigo,
-        status: req.body.emprestimo.status,
-        data_devolucao: req.body.emprestimo.data_devolucao,
-        data: req.body.emprestimo.data,
-        retorno_previsto: req.body.emprestimo.retorno_previsto,
-      })
-      .then((emprestimo) => {
-        return res.status(201).json({
-          emprestimo: {
-            id: emprestimo.id,
-            codigo: emprestimo.codigo,
-            status: emprestimo.status,
-            data_devolucao: emprestimo.data_devolucao,
-            data: emprestimo.data,
-            retorno_previsto: emprestimo.retorno_previsto,
-          },
-        });
-      })
-      .catch((err) => {
-        console.log("ERRO: " + err);
-      });
   }
 
   async index(req, res) {
