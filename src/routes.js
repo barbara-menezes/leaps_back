@@ -35,7 +35,6 @@ routes.post("/sessions", SessionController.store);
 
 routes.post(
   "/disciplina",
-  validateDisciplinaStore,
   DisciplinaController.store
 );
 

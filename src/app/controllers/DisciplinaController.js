@@ -1,46 +1,67 @@
 import * as Yup from "yup";
 import Disciplina from "../models/Disciplina";
 import Sequelize from "sequelize";
-const Op = Sequelize.Op;
-// import Mail from '../lib/Mail';
 import Aluno from "../models/Aluno";
 import Teste from "../models/Teste";
+// import Mail from '../lib/Mail';
+const Op = Sequelize.Op;
 
 class DisciplinaController {
   async store(req, res) {
-    const disciplinaExist = await Disciplina.findOne({
-      where: {
-        codigo: req.body.disciplina.codigo,
-      },
-    });
+    try {
+      const {
+        testes,
+        ...data
+      } = req.body;
 
-    if (disciplinaExist) {
-      return res.status(200).json({
-        error: "Disciplina já cadastrada.",
+      const disciplina = await Disciplina.create(data);
+
+      if (testes && testes.length > 0) {
+        disciplina.setTestes(testes);
+      }
+
+      return res.status(200).json(disciplina);
+    } catch (err) {
+      return res.status(500).json({
+        err
       });
     }
-
-    await Disciplina.create({
-        nome_disciplina: req.body.disciplina.nome_disciplina,
-        turno: req.body.disciplina.turno,
-        periodo: req.body.disciplina.periodo,
-        codigo: req.body.disciplina.codigo,
-      })
-      .then((disciplina) => {
-        return res.status(201).json({
-          disciplina: {
-            id: disciplina.id,
-            nome_disciplina: disciplina.nome_disciplina,
-            turno: disciplina.turno,
-            periodo: disciplina.periodo,
-            codigo: disciplina.codigo,
-          },
-        });
-      })
-      .catch((err) => {
-        console.log("ERRO: " + err);
-      });
   }
+
+    // async store_2(req, res) {
+  //   const disciplinaExist = await Disciplina.findOne({
+  //     where: {
+  //       codigo: req.body.disciplina.codigo,
+  //     },
+  //   });
+
+  //   if (disciplinaExist) {
+  //     return res.status(200).json({
+  //       error: "Disciplina já cadastrada.",
+  //     });
+  //   }
+
+  //   await Disciplina.create({
+  //       nome_disciplina: req.body.disciplina.nome_disciplina,
+  //       turno: req.body.disciplina.turno,
+  //       periodo: req.body.disciplina.periodo,
+  //       codigo: req.body.disciplina.codigo,
+  //     })
+  //     .then((disciplina) => {
+  //       return res.status(201).json({
+  //         disciplina: {
+  //           id: disciplina.id,
+  //           nome_disciplina: disciplina.nome_disciplina,
+  //           turno: disciplina.turno,
+  //           periodo: disciplina.periodo,
+  //           codigo: disciplina.codigo,
+  //         },
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       console.log("ERRO: " + err);
+  //     });
+  // }
 
   async index(req, res) {
     const {
@@ -75,6 +96,7 @@ class DisciplinaController {
         console.log("ERRO: " + err);
       });
   }
+  
   async showById(req, res) {
     await Disciplina.findOne({
         where: {
