@@ -3,6 +3,7 @@ import Aluno from "../models/Aluno";
 import Sequelize from "sequelize";
 import Disciplina from "../models/Disciplina";
 import Emprestimo from "../models/Emprestimo";
+import Teste from "../models/Teste";
 const Op = Sequelize.Op;
 
 class AlunoController {
@@ -176,14 +177,11 @@ class AlunoController {
             matricula: {
               [Op.iLike]: "%" + query[i] + "%",
             },
-          },include: [{
-            model: Disciplina,
-            as: "disciplinas",
-            through: {
-              attributes: [],
-            },
-          },
-        ],
+          },include: [
+            {model: Disciplina, as: 'disciplinas', include: [
+              {model: Teste, as: 'testes'}
+            ]}
+          ],
           attributes: ["matricula", "nome", "telefone", "email"],
         })
       );
@@ -209,14 +207,11 @@ class AlunoController {
               [Op.iLike]: "%" + query[i] + "%",
             },
           },
-          include: [{
-            model: Disciplina,
-            as: "disciplinas",
-            through: {
-              attributes: [],
-            },
-          },
-        ],
+          include: [
+            {model: Disciplina, as: 'disciplinas', include: [
+              {model: Teste, as: 'testes'}
+            ]}
+          ],
           attributes: ["matricula", "nome", "telefone", "email"],
         })
       );
