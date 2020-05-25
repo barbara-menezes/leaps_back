@@ -96,6 +96,47 @@ class EmprestimoController {
       });
   }
 
+  async devolucao(req, res) {
+    const idExist = await Emprestimo.findOne({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    if (!idExist) {
+      return res.status(200).json({
+        error: "ID do Empréstimo informado não encontrado.",
+      });
+    }
+
+    await Emprestimo.findOne({
+        where: {
+          id: req.params.id,
+        },
+      })
+      .then(async (emprestimo) => {
+        if (emprestimo) {
+          await emprestimo.update(await emprestimo.update({
+            data_devolucao: req.body.data_devolucao, 
+            status: "devolvido",
+          })
+          );
+          return res.status(201).json({
+            emprestimo,
+          });
+        } else {
+          return res.status(200).json({
+            error: "Emprestimo não encontrado.",
+          });
+        }
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          error: "Erro no servidor.",
+        });
+      });
+  }
+
   async delete(req, res) {
     const emprestimo = await Emprestimo.findOne({
       where: {

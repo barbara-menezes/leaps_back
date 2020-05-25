@@ -18,7 +18,7 @@ module.exports = {
       },
       data_devolucao: {
         type: Sequelize.DATE,
-        allowNull: false,
+        allowNull: true,
       },
       data: {
         type: Sequelize.DATE,
