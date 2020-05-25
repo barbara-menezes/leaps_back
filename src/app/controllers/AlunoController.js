@@ -92,6 +92,14 @@ class AlunoController {
         where: {
           id: req.params.id,
         },
+        include: [{
+          model: Disciplina,
+          as: "disciplinas",
+          through: {
+            attributes: [],
+          },
+        },
+      ],
       })
       .then((aluno) => {
         return res.status(201).json({
@@ -110,6 +118,14 @@ class AlunoController {
       where: {
         matricula: req.params.matricula,
       },
+      include: [{
+        model: Disciplina,
+        as: "disciplinas",
+        through: {
+          attributes: [],
+        },
+      },
+    ],
     });
 
     if (!idExist) {
@@ -160,7 +176,14 @@ class AlunoController {
             matricula: {
               [Op.iLike]: "%" + query[i] + "%",
             },
+          },include: [{
+            model: Disciplina,
+            as: "disciplinas",
+            through: {
+              attributes: [],
+            },
           },
+        ],
           attributes: ["matricula", "nome", "telefone", "email"],
         })
       );
@@ -186,6 +209,14 @@ class AlunoController {
               [Op.iLike]: "%" + query[i] + "%",
             },
           },
+          include: [{
+            model: Disciplina,
+            as: "disciplinas",
+            through: {
+              attributes: [],
+            },
+          },
+        ],
           attributes: ["matricula", "nome", "telefone", "email"],
         })
       );

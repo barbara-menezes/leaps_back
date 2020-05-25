@@ -102,6 +102,13 @@ class DisciplinaController {
         where: {
           id: req.params.id,
         },
+        include: [
+        {
+          model: Teste,
+          as: 'testes',
+          attributes: ['id', 'nome', 'codigo', 'status'],
+        }
+      ],
       })
       .then((disciplina) => {
         return res.status(201).json({
