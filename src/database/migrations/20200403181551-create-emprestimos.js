@@ -9,31 +9,30 @@ module.exports = {
       },
       codigo: {
         type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
+        allowNull: true
       },
       status: {
         type: Sequelize.STRING,
         allowNull: false,
       },
       data_devolucao: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: true,
       },
       data: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: false,
       },
       retorno_previsto: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: false,
       },
       created_at: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: false,
       },
       updated_at: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: false,
       },
     });
