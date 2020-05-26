@@ -182,7 +182,7 @@ class AlunoController {
               {model: Teste, as: 'testes'}
             ]}
           ],
-          attributes: ["matricula", "nome", "telefone", "email"],
+          attributes: ["id", "matricula", "nome", "telefone", "email"],
         })
       );
     }
@@ -212,7 +212,7 @@ class AlunoController {
               {model: Teste, as: 'testes'}
             ]}
           ],
-          attributes: ["matricula", "nome", "telefone", "email"],
+          attributes: ["id", "matricula", "nome", "telefone", "email"],
         })
       );
     }
