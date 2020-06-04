@@ -72,7 +72,7 @@ class UsuarioMonitorController {
   }
 
   async index(req, res) {
-    await Usuario_Monitor.findAll({
+    await Usuario.findAll({
     })
       .then(usuario => {
         return res.status(201).json({
