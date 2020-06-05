@@ -104,12 +104,12 @@ class UsuarioMonitorController {
   }
 
   async showById(req, res) {
-    await Usuario_Monitor.findOne({
+    await Usuario.findOne({
       where: { id: req.params.id }
     })
-      .then(usuario_monitor => {
+      .then(usuario => {
         return res.status(201).json({
-          usuario_monitor
+          usuario
         });
       })
       .catch(err => {
