@@ -29,7 +29,7 @@ yarn dev
 * **Matheus Santos** - [mcarneirobug](https://github.com/mcarneirobug)
 * **Raíssa Vilela** - [raissavilela](https://github.com/raissavilela)
 * **Vitor Augusto** - [ovitorj](https://github.com/ovitorj)
-
+* **João Pedro Teles** - [seteljota](https://github.com/seteljota)
 
 
 
