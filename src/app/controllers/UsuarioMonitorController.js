@@ -72,18 +72,29 @@ class UsuarioMonitorController {
   }
 
   async index(req, res) {
-    await Usuario.findAll({
+    
+    const page = req.query.page !== undefined ? parseInt(req.query.page) : 1;
+    const limit = req.query.limit !== undefined ? parseInt(req.query.limit) : 10;
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+
+    const monitores = await Usuario_Monitor.findAll({
+      attributes: ["id", "tipo"],
+      order: [["id", "ASC"]]
     })
-      .then(usuario => {
-        return res.status(201).json({
-          usuario
+    const monitor = monitores.slice(startIndex, endIndex)
+    try{
+      return res.status(201).json({
+            monitor,  
+            currentPage: page,
+            previousPage: startIndex > 0 ? page - 1 : "Nao existe pagina anterior",
+            nextPage: endIndex < monitores.length ? page + 1 : "Nao existe pagina posterior",
+            limit: limit
         });
-      })
-      .catch(err => {
-        return res.status(500).json({
-          error: "Erro no servidor."
-        });
-      });
+    }
+    catch(err){
+      console.log("ERRO: " + err);
+    };
   }
 
   async showByUsuario(req, res) {
@@ -104,12 +115,12 @@ class UsuarioMonitorController {
   }
 
   async showById(req, res) {
-    await Usuario.findOne({
+    await Usuario_Monitor.findOne({
       where: { id: req.params.id }
     })
-      .then(usuario => {
+      .then(usuario_monitor => {
         return res.status(201).json({
-          usuario
+          usuario_monitor
         });
       })
       .catch(err => {
