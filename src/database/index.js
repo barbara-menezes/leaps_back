@@ -8,7 +8,8 @@ import Usuario_Coordenador from "../app/models/Usuario_Coordenador";
 import Token_Senha from "../app/models/Token_Senha";
 import Disciplina from "../app/models/Disciplina";
 import Aluno from "../app/models/Aluno";
-import Lista_Espera from "../app/models/Lista_Espera"
+import Teste from "../app/models/Teste";
+import Emprestimo from "../app/models/Emprestimo";
 require('dotenv').config()
 
 const models = [
@@ -19,7 +20,8 @@ const models = [
   Token_Senha,
   Disciplina,
   Aluno,
-  Lista_Espera
+  Teste,
+  Emprestimo
 ];
 
 class Database {
@@ -28,8 +30,8 @@ class Database {
   }
 
   init() {
-    
-    this.connection = new Sequelize(process.env.HEROKU_POSTGRESQL_CRIMSON_URL,{
+
+    this.connection = new Sequelize(process.env.DATABASE_URL, {
       dialect: 'postgres',
       define: {
         timestamps: true,
@@ -37,11 +39,11 @@ class Database {
         underscoredAll: true,
       },
     });
-    
+
 
     models
-    .map(model => model.init(this.connection))
-    .map(model => model.associate && model.associate(this.connection.models));
+      .map(model => model.init(this.connection))
+      .map(model => model.associate && model.associate(this.connection.models));
   }
 }
 
