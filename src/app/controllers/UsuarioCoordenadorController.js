@@ -78,18 +78,29 @@ class UsuarioCoordenadorController {
   }
 
   async index(req, res) {
-    await Usuario_Coordenador.findAll({
-    })
-      .then(usuario => {
-        return res.status(201).json({
-          usuario
-        });
+
+      const page = req.query.page !== undefined ? parseInt(req.query.page) : 1;
+      const limit = req.query.limit !== undefined ? parseInt(req.query.limit) : 10;
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+
+      const coordenadores = await Usuario_Coordenador.findAll({
+        attributes: ["id", "cod_pessoa"],
+        order: [["id", "ASC"]]
       })
-      .catch(err => {
-        return res.status(500).json({
-          error: "Erro no servidor."
-        });
-      });
+      const coordenador = coordenadores.slice(startIndex, endIndex)
+      try{
+        return res.status(201).json({
+              coordenador,  
+              currentPage: page,
+              previousPage: startIndex > 0 ? page - 1 : "Nao existe pagina anterior",
+              nextPage: endIndex < coordenadores.length ? page + 1 : "Nao existe pagina posterior",
+              limit: limit
+          });
+      }
+      catch(err){
+        console.log("ERRO: " + err);
+      };
   }
 
   async showByUsuario(req, res) {
