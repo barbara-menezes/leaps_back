@@ -127,6 +127,14 @@ class DisciplinaController {
       where: {
         id: req.params.id,
       },
+      include: [{
+        model: Teste,
+        as: "testes",
+        through: {
+          attributes: [],
+        },
+      },
+    ],
     });
 
     if (!idExist) {
@@ -142,7 +150,15 @@ class DisciplinaController {
       })
       .then(async (disciplina) => {
         if (disciplina) {
-          await disciplina.update(req.body.disciplina);
+          const {
+            testes,
+            ...data
+          } = req.body;
+
+          await disciplina.update(data);
+          if (testes && testes.length > 0) {
+            disciplina.setTestes(testes);
+          }
           return res.status(201).json({
             disciplina,
           });
