@@ -136,7 +136,7 @@ class EmprestimoController {
         if (emprestimo) {
           await emprestimo.update({
             data_devolucao: req.body.data_devolucao, 
-            status: "devolvido",
+            status: "Devolvido",
           })
           Teste.findOne({
             where: {
