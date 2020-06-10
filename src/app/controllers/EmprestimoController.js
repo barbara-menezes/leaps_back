@@ -33,7 +33,7 @@ class EmprestimoController {
       })
       .then(async (teste) => {
         if (teste) {
-          await teste.update({status:"Emprestado"});
+          await teste.update({status:"EMPRESTADO"});
           return res.status(201).json({
             teste,
           });
@@ -136,7 +136,7 @@ class EmprestimoController {
         if (emprestimo) {
           await emprestimo.update({
             data_devolucao: req.body.data_devolucao, 
-            status: "Devolvido",
+            status: "DEVOLVIDO",
           })
           Teste.findOne({
             where: {
@@ -145,7 +145,7 @@ class EmprestimoController {
           })
           .then(async (teste) => {
             if (teste) {
-              await teste.update({status:"Disponível"});
+              await teste.update({status:"DISPONÍVEL"});
               return res.status(201).json({
                 teste,
               });
