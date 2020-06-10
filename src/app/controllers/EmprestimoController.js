@@ -145,7 +145,7 @@ class EmprestimoController {
           })
           .then(async (teste) => {
             if (teste) {
-              await teste.update({status:"DISPONÍVEL"});
+              await teste.update({status:"DISPONIVEL"});
               return res.status(201).json({
                 teste,
               });
