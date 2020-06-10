@@ -26,6 +26,19 @@ class EmprestimoController {
         emprestimo.setAlunos(alunos);
         emprestimo.setTestes(testes);
       }
+      Teste.findOne({
+        where: {
+          id: testes,
+        },
+      })
+      .then(async (teste) => {
+        if (teste) {
+          await teste.update({status:"emprestado"});
+          return res.status(201).json({
+            teste,
+          });
+        }
+      })
 
       return res.status(200).json(emprestimo);
     } catch (err) {
