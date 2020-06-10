@@ -33,7 +33,7 @@ class EmprestimoController {
       })
       .then(async (teste) => {
         if (teste) {
-          await teste.update({status:"emprestado"});
+          await teste.update({status:"Emprestado"});
           return res.status(201).json({
             teste,
           });
@@ -121,19 +121,37 @@ class EmprestimoController {
         error: "ID do Empréstimo informado não encontrado.",
       });
     }
-
+    
     await Emprestimo.findOne({
         where: {
           id: req.params.id,
         },
+        include: [{
+          model: Teste,
+          as: "testes",
+          attributes: ["id", "nome", "codigo", "status"],
+        }],
       })
       .then(async (emprestimo) => {
         if (emprestimo) {
-          await emprestimo.update(await emprestimo.update({
+          await emprestimo.update({
             data_devolucao: req.body.data_devolucao, 
             status: "devolvido",
           })
-          );
+          Teste.findOne({
+            where: {
+              id: emprestimo.testes[0].id,
+            },
+          })
+          .then(async (teste) => {
+            if (teste) {
+              await teste.update({status:"Disponível"});
+              return res.status(201).json({
+                teste,
+              });
+            }
+          })
+
           return res.status(201).json({
             emprestimo,
           });
